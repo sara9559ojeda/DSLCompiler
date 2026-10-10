@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { CompileResult } from "@compiler-img/compiler/browser";
+import type { CompileResult } from "@compiler-img/compiler-core";
 import { DEFAULT_DSL_SOURCE } from "../config/app.config.js";
 
 interface EditorState {

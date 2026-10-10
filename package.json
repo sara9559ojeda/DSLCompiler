@@ -13,7 +13,7 @@
     "e2e": "playwright test"
   },
   "dependencies": {
-    "@compiler-img/compiler": "0.1.0",
+    "@compiler-img/compiler-core": "0.1.0",
     "@monaco-editor/react": "^4.6.0",
     "lucide-react": "^0.454.0",
     "monaco-editor": "^0.52.0",

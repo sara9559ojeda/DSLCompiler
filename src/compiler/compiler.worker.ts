@@ -1,4 +1,4 @@
-import { createDefaultPipeline } from "@compiler-img/compiler/browser";
+import { createDefaultPipeline } from "@compiler-img/compiler-core";
 
 interface CompileRequestMessage {
   readonly type: "compile";
