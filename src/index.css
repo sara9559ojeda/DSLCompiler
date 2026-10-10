@@ -148,6 +148,49 @@ button {
   max-width: 240px;
 }
 
+.ai-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface-alt);
+  flex-wrap: wrap;
+}
+
+.ai-bar__icon {
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.ai-bar__input {
+  flex: 1;
+  min-width: 180px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 0.875rem;
+}
+
+.ai-bar__input:disabled {
+  opacity: 0.6;
+}
+
+.ai-bar__note {
+  flex-basis: 100%;
+  font-size: 0.8125rem;
+}
+
+.ai-bar__note--error {
+  color: var(--color-error);
+}
+
+.ai-bar__note--warning {
+  color: var(--color-warning);
+}
+
 .button {
   display: inline-flex;
   align-items: center;
