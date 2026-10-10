@@ -3,6 +3,7 @@ FROM node:20-slim AS deps
 WORKDIR /app
 COPY package.json package-lock.json tsconfig.base.json ./
 COPY packages/shared/package.json packages/shared/package.json
+COPY packages/compiler-core/package.json packages/compiler-core/package.json
 COPY services/compiler/package.json services/compiler/package.json
 COPY services/projects/package.json services/projects/package.json
 COPY services/ai-assist/package.json services/ai-assist/package.json
@@ -15,10 +16,10 @@ FROM deps AS build
 # Render's Blueprint format has no way to pass Docker build args, and baking
 # an absolute URL in at build time would mean one image per deploy target.
 COPY packages/shared packages/shared
-COPY services/compiler services/compiler
+COPY packages/compiler-core packages/compiler-core
 COPY apps/web apps/web
 RUN npm run build --workspace=packages/shared \
- && npm run build --workspace=services/compiler \
+ && npm run build --workspace=packages/compiler-core \
  && npm run build --workspace=apps/web
 
 FROM nginx:1.27-alpine AS runtime
