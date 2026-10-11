@@ -15,8 +15,8 @@ export function defineMonacoThemes(monaco: typeof Monaco): void {
     inherit: true,
     rules: [],
     colors: {
-      "editor.background": "#ffffff",
-      "editor.foreground": "#1a1a1f",
+      "editor.background": "#f8f7f2",
+      "editor.foreground": "#06232d",
     },
   });
 
@@ -25,8 +25,8 @@ export function defineMonacoThemes(monaco: typeof Monaco): void {
     inherit: true,
     rules: [],
     colors: {
-      "editor.background": "#1e1e24",
-      "editor.foreground": "#f2f2f5",
+      "editor.background": "#0a2e3b",
+      "editor.foreground": "#f8f7f2",
     },
   });
 }

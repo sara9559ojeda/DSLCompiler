@@ -32,6 +32,13 @@ export const COMPILE_DEBOUNCE_MS = 300;
 export const SVG_EXPORT_FILENAME = "diagrama.svg";
 export const PNG_EXPORT_FILENAME = "diagrama.png";
 
+export const BRAND_NAME = "Compilador de Imágenes";
+
+/** localStorage key for the export history panel — see useExportHistoryStore.ts. */
+export const EXPORT_HISTORY_STORAGE_KEY = "compiler-img:export-history";
+/** Oldest entries are dropped once the list grows past this, to keep localStorage bounded (PNG entries embed a base64 data URL). */
+export const EXPORT_HISTORY_MAX_ENTRIES = 8;
+
 export const DEFAULT_DSL_SOURCE = [
   "c1 = crear_circulo(radio=50, color=rojo, x=100, y=100);",
   "r1 = crear_rectangulo(ancho=80, alto=40, color=azul, x=200, y=150);",
