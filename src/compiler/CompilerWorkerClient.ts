@@ -1,4 +1,4 @@
-import type { CompileResult } from "@compiler-img/compiler-core";
+import type { CompileResult } from "@saramariaojeda9559/compiler-core";
 
 interface WorkerResponse {
   readonly id: number;
