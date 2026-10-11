@@ -1,0 +1,16 @@
+# Render Blueprint — despliega solo el frontend. El backend (gateway +
+# servicios + Postgres) se despliega por separado desde su propio
+# repositorio (DSLCompiler_Backend) — ver GATEWAY_URL abajo.
+services:
+  - type: web
+    name: dslcompiler-web
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    envVars:
+      # Resuelto al *arrancar* el contenedor, no en build time (ver
+      # docker/runtime-config-entrypoint.sh) — la URL pública real del
+      # gateway del backend, una vez que ese repo esté desplegado.
+      - key: GATEWAY_URL
+        sync: false

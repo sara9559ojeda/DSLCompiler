@@ -1,0 +1,124 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "20"
+
+jobs:
+  test:
+    name: Lint, typecheck, unit tests & build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+  # Checks out the backend's own repo alongside this one and brings its
+  # docker-compose stack up, so e2e runs against the real gateway — not a
+  # mock. Both repos are public, so no extra credentials are needed.
+  e2e:
+    name: e2e against the real backend
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: frontend
+
+      - uses: actions/checkout@v4
+        with:
+          repository: sara9559ojeda/DSLCompiler_Backend
+          path: backend
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Start the backend stack
+        working-directory: backend
+        run: |
+          cp .env.example .env
+          docker compose build
+          docker compose up -d
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      - name: Wait for the gateway to become healthy
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:4000/health > /dev/null; then
+              echo "Gateway is healthy"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Gateway never became healthy" >&2
+          docker compose -f backend/docker-compose.yml logs
+          exit 1
+
+      - name: Install frontend dependencies and build
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run build
+          npx vite preview --port 8080 --strictPort &
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8080 > /dev/null; then
+              echo "Frontend preview is up"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "Frontend preview never came up" >&2
+          exit 1
+
+      - name: Run Playwright e2e tests
+        working-directory: frontend
+        run: npx playwright test
+        env:
+          E2E_BASE_URL: http://localhost:8080
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: frontend/playwright-report/
+          retention-days: 7
+
+      - name: Dump backend logs on failure
+        if: failure()
+        run: docker compose -f backend/docker-compose.yml logs
+
+      - name: Tear down the backend stack
+        if: always()
+        run: docker compose -f backend/docker-compose.yml down -v
