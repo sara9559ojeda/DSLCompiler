@@ -288,11 +288,17 @@ a {
   background: var(--palette-navy);
   color: var(--palette-white);
   padding: var(--space-10) var(--space-6) var(--space-8);
+  /* Fills the whole first screen, like a landing page's hero section —
+     not just a compact banner wrapped tightly around the text. */
+  min-height: calc(100svh - 68px);
+  display: flex;
+  align-items: center;
 }
 
 .hero__inner {
   position: relative;
   z-index: 1;
+  width: 100%;
   max-width: var(--content-max-width);
   margin: 0 auto;
   display: grid;
