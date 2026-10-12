@@ -11,6 +11,10 @@ export function PageBackdrop(): JSX.Element {
     <svg className="page-backdrop" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <pattern id="backdrop-tile" width="120" height="120" patternUnits="userSpaceOnUse">
+          {/* Bold Memphis-style polka dots, two sizes */}
+          <circle cx="60" cy="14" r="9" fill="var(--color-text)" opacity="0.14" />
+          <circle cx="5" cy="100" r="13" fill="var(--color-text)" opacity="0.12" />
+
           <circle cx="14" cy="16" r="3" fill="var(--palette-orange)" opacity="0.8" />
           <circle cx="23" cy="16" r="3" fill="var(--palette-orange)" opacity="0.8" />
           <circle cx="18.5" cy="24" r="3" fill="var(--palette-orange)" opacity="0.8" />

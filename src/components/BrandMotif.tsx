@@ -84,6 +84,32 @@ function Star({ cx, cy, s, fill }: { cx: number; cy: number; s: number; fill: st
   );
 }
 
+const CONCENTRIC_LAYERS = [
+  { scale: 1, fill: "#087ac0" },
+  { scale: 0.78, fill: "#ff9f17" },
+  { scale: 0.56, fill: "#e93622" },
+  { scale: 0.36, fill: "#19a9d2" },
+  { scale: 0.18, fill: "#fff4de" },
+];
+
+/** Nested organic rings, like the layered wavy-stripe pattern reference — a second motif "family" alongside the eyes/hearts/stars. */
+function ConcentricBlob({ cx, cy, s }: { cx: number; cy: number; s: number }): JSX.Element {
+  return (
+    <g transform={`translate(${cx} ${cy}) scale(${s})`}>
+      {CONCENTRIC_LAYERS.map((layer) => (
+        <path
+          key={layer.scale}
+          d="M0 -60C33 -55 60 -28 58 6C56 42 30 68 -8 65C-46 62 -68 30 -62 -6C-58 -32 -30 -64 0 -60Z"
+          fill={layer.fill}
+          stroke="#06232d"
+          strokeWidth={2.5 / layer.scale}
+          transform={`scale(${layer.scale})`}
+        />
+      ))}
+    </g>
+  );
+}
+
 /**
  * Full-bleed hero illustration — covers the entire banner edge to edge
  * (via preserveAspectRatio="xMidYMid slice", like background-size: cover),
@@ -179,6 +205,9 @@ export function HeroIllustration(): JSX.Element {
       <Eye cx={190} cy={640} r={46} iris="#e93622" />
       <Eye cx={300} cy={470} r={38} iris="#19a9d2" />
       <Eye cx={1230} cy={660} r={42} iris="#ff9f17" />
+
+      <ConcentricBlob cx={1010} cy={190} s={1.3} />
+      <ConcentricBlob cx={470} cy={630} s={0.8} />
 
       <Heart cx={420} cy={150} s={1.3} fill="#e93622" />
       <Heart cx={1180} cy={470} s={1} fill="#ff9f17" />
