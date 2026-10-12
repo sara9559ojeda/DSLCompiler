@@ -137,6 +137,11 @@ a {
 
 .workspace-section {
   position: relative;
+  /* Matches the hero: this second section also fills a full screen
+     instead of just wrapping tightly around its content. */
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
 }
 
 .page-backdrop {
@@ -402,6 +407,7 @@ a {
      positioned .page-backdrop within .workspace-section — see the note
      on .page-backdrop above. */
   position: relative;
+  width: 100%;
   max-width: var(--content-max-width);
   margin: 0 auto;
   display: grid;
