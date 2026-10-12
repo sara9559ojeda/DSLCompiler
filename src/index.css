@@ -317,12 +317,14 @@ a {
 }
 
 .hero__textbox {
+  /* Fully opaque on purpose — a translucent box let whatever illustration
+     sat behind it (dot clusters, blob outlines) bleed through as a faint
+     ghost, which read as a bug rather than a design choice. */
   max-width: 46ch;
-  background: rgba(6, 35, 45, 0.88);
+  background: var(--palette-navy);
   border: 2px solid var(--palette-cream);
   border-radius: var(--radius-lg);
   padding: var(--space-6) var(--space-8);
-  backdrop-filter: blur(2px);
 }
 
 .hero__eyebrow {
