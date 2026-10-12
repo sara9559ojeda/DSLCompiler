@@ -7,25 +7,21 @@ import { Hero } from "./components/Hero.js";
 import { AiGenerateBar } from "./components/AiGenerateBar.js";
 import { ExportPanel } from "./components/ExportPanel.js";
 import { ExportHistoryPanel } from "./components/ExportHistoryPanel.js";
-import { GuideBubble } from "./components/GuideBubble.js";
 import { useCompilerSync } from "./compiler/useCompilerSync.js";
 
 export function App(): JSX.Element {
   useCompilerSync();
 
   return (
-    <>
-      <AppLayout
-        header={<Header />}
-        hero={<Hero />}
-        aiBar={<AiGenerateBar />}
-        editor={<CodeEditor />}
-        preview={<PreviewPanel />}
-        diagnostics={<DiagnosticsList />}
-        exportPanel={<ExportPanel />}
-        exportHistory={<ExportHistoryPanel />}
-      />
-      <GuideBubble />
-    </>
+    <AppLayout
+      header={<Header />}
+      hero={<Hero />}
+      aiBar={<AiGenerateBar />}
+      editor={<CodeEditor />}
+      preview={<PreviewPanel />}
+      diagnostics={<DiagnosticsList />}
+      exportPanel={<ExportPanel />}
+      exportHistory={<ExportHistoryPanel />}
+    />
   );
 }
