@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { PageBackdrop } from "./PageBackdrop.js";
 
 interface AppLayoutProps {
   readonly header: ReactNode;
@@ -23,7 +24,9 @@ export function AppLayout({
 }: AppLayoutProps): JSX.Element {
   return (
     <div className="app-shell">
+      <PageBackdrop />
       {header}
+      <div className="brand-stripe" aria-hidden="true" />
       <div className="app-shell__scroll">
         {hero}
         <main className="workspace">

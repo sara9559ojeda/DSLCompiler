@@ -33,7 +33,7 @@ export function HeroMotif(): JSX.Element {
   return (
     <svg
       className="hero__motif"
-      viewBox="0 0 280 260"
+      viewBox="-24 -24 328 308"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
