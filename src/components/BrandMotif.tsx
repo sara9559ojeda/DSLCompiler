@@ -204,6 +204,7 @@ export function HeroIllustration(): JSX.Element {
       <Heart cx={1180} cy={460} s={0.9} fill="#19a9d2" />
       <Heart cx={1490} cy={240} s={0.85} fill="#fff4de" />
       <Heart cx={110} cy={340} s={0.7} fill="#ff9f17" />
+      <Heart cx={870} cy={90} s={0.7} fill="#ff9f17" />
 
       <Star cx={330} cy={200} s={0.7} fill="#19a9d2" rotate={10} />
       <Star cx={930} cy={260} s={0.6} fill="#e93622" rotate={-15} />
@@ -233,6 +234,11 @@ export function HeroIllustration(): JSX.Element {
         <circle cx="262" cy="110" r="6" />
         <circle cx="251" cy="130" r="6" />
       </g>
+      <g fill="#19a9d2">
+        <circle cx="770" cy="190" r="7" />
+        <circle cx="794" cy="190" r="7" />
+        <circle cx="782" cy="212" r="7" />
+      </g>
 
       {/* Oval pills — deliberately all cream, a neutral "confetti" accent
           that never competes for a color slot with its neighbors. */}
@@ -242,10 +248,12 @@ export function HeroIllustration(): JSX.Element {
       <ellipse cx="700" cy="60" rx="24" ry="12" fill="#fff4de" stroke="#06232d" strokeWidth="3" transform="rotate(20 700 60)" />
       <ellipse cx="40" cy="480" rx="22" ry="11" fill="#fff4de" stroke="#06232d" strokeWidth="3" transform="rotate(10 40 480)" />
 
-      {/* Ring accents — always cream against navy, never navy-on-navy. */}
-      <circle cx="430" cy="580" r="16" fill="none" stroke="#fff4de" strokeWidth="3" opacity="0.55" />
-      <circle cx="1480" cy="150" r="18" fill="none" stroke="#fff4de" strokeWidth="3" opacity="0.55" />
-      <circle cx="980" cy="110" r="12" fill="none" stroke="#fff4de" strokeWidth="3" opacity="0.55" />
+      {/* Ring accents — fully opaque cream, always against bare navy. A
+          translucent stroke here blended into a dull gray smudge instead
+          of reading as a crisp ring. */}
+      <circle cx="430" cy="580" r="16" fill="none" stroke="#fff4de" strokeWidth="4" />
+      <circle cx="1480" cy="150" r="18" fill="none" stroke="#fff4de" strokeWidth="4" />
+      <circle cx="1120" cy="230" r="13" fill="none" stroke="#fff4de" strokeWidth="4" />
     </svg>
   );
 }
