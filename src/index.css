@@ -50,6 +50,8 @@
   --space-8: 32px;
   --space-10: 40px;
 
+  --content-max-width: 1320px;
+
   --stroke-bold: 2.5px;
 }
 
@@ -286,6 +288,13 @@ a {
   background: var(--palette-navy);
   color: var(--palette-white);
   padding: var(--space-10) var(--space-6) var(--space-8);
+}
+
+.hero__inner {
+  position: relative;
+  z-index: 1;
+  max-width: var(--content-max-width);
+  margin: 0 auto;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
@@ -294,6 +303,47 @@ a {
 
 .hero__copy {
   max-width: 46ch;
+}
+
+.hero__scatter {
+  position: absolute;
+  pointer-events: none;
+}
+
+.hero__scatter--a {
+  width: 70px;
+  top: 14%;
+  left: 4%;
+}
+
+.hero__scatter--b {
+  width: 46px;
+  bottom: 12%;
+  left: 12%;
+}
+
+.hero__scatter--c {
+  width: 90px;
+  top: 8%;
+  right: 6%;
+}
+
+.hero__scatter--d {
+  width: 34px;
+  bottom: 18%;
+  right: 16%;
+}
+
+@media (max-width: 1200px) {
+  .hero__scatter--c {
+    right: 2%;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero__scatter {
+    display: none;
+  }
 }
 
 .hero__eyebrow {
@@ -329,7 +379,7 @@ a {
 }
 
 @media (max-width: 900px) {
-  .hero {
+  .hero__inner {
     grid-template-columns: 1fr;
   }
 
@@ -342,6 +392,8 @@ a {
 /* ---------- Workspace ---------- */
 
 .workspace {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 340px;
   gap: var(--space-4);
