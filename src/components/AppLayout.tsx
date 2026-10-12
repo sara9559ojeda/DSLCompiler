@@ -24,57 +24,62 @@ export function AppLayout({
 }: AppLayoutProps): JSX.Element {
   return (
     <div className="app-shell">
-      <PageBackdrop />
       {header}
       <div className="brand-stripe" aria-hidden="true" />
       <div className="app-shell__scroll">
         {hero}
-        <main className="workspace">
-          <section className="workspace__main">
-            <div className="panel panel--flush" id="proyecto">
-              <header className="panel__head">
-                <span className="panel__eyebrow">Proyecto</span>
-                <h2 className="panel__title">Escribe o genera tu diagrama</h2>
-              </header>
-              {aiBar}
-            </div>
-            <div className="workspace__editors" id="compilar">
-              <div className="panel panel--flush">
+        {/* The decorative backdrop is scoped to this section only (not the
+            whole page) and scrolls with it like a normal landing-page
+            background — not a fixed/parallax layer. */}
+        <div className="workspace-section">
+          <PageBackdrop />
+          <main className="workspace">
+            <section className="workspace__main">
+              <div className="panel panel--flush" id="proyecto">
                 <header className="panel__head">
-                  <span className="panel__eyebrow">Editor</span>
-                  <h2 className="panel__title">Código DSL</h2>
+                  <span className="panel__eyebrow">Proyecto</span>
+                  <h2 className="panel__title">Escribe o genera tu diagrama</h2>
                 </header>
-                <div className="panel__editor">{editor}</div>
+                {aiBar}
               </div>
-              <div className="panel panel--flush">
-                <header className="panel__head">
-                  <span className="panel__eyebrow">Compilar</span>
-                  <h2 className="panel__title">Previsualización en vivo</h2>
-                </header>
-                <div className="panel__preview-wrap">
-                  {preview}
-                  {diagnostics}
+              <div className="workspace__editors" id="compilar">
+                <div className="panel panel--flush">
+                  <header className="panel__head">
+                    <span className="panel__eyebrow">Editor</span>
+                    <h2 className="panel__title">Código DSL</h2>
+                  </header>
+                  <div className="panel__editor">{editor}</div>
+                </div>
+                <div className="panel panel--flush">
+                  <header className="panel__head">
+                    <span className="panel__eyebrow">Compilar</span>
+                    <h2 className="panel__title">Previsualización en vivo</h2>
+                  </header>
+                  <div className="panel__preview-wrap">
+                    {preview}
+                    {diagnostics}
+                  </div>
                 </div>
               </div>
-            </div>
-          </section>
-          <aside className="workspace__sidebar" id="exportaciones">
-            <div className="panel">
-              <header className="panel__head">
-                <span className="panel__eyebrow">Exportaciones</span>
-                <h2 className="panel__title">Descargar resultado</h2>
-              </header>
-              <div className="panel__body">{exportPanel}</div>
-            </div>
-            <div className="panel">
-              <header className="panel__head">
-                <span className="panel__eyebrow">Historial</span>
-                <h2 className="panel__title">Exportaciones recientes</h2>
-              </header>
-              <div className="panel__body">{exportHistory}</div>
-            </div>
-          </aside>
-        </main>
+            </section>
+            <aside className="workspace__sidebar" id="exportaciones">
+              <div className="panel">
+                <header className="panel__head">
+                  <span className="panel__eyebrow">Exportaciones</span>
+                  <h2 className="panel__title">Descargar resultado</h2>
+                </header>
+                <div className="panel__body">{exportPanel}</div>
+              </div>
+              <div className="panel">
+                <header className="panel__head">
+                  <span className="panel__eyebrow">Historial</span>
+                  <h2 className="panel__title">Exportaciones recientes</h2>
+                </header>
+                <div className="panel__body">{exportHistory}</div>
+              </div>
+            </aside>
+          </main>
+        </div>
       </div>
     </div>
   );

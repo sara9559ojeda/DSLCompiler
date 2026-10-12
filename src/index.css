@@ -130,9 +130,17 @@ a {
 }
 
 /* ---------- Page backdrop ---------- */
+/* Scoped to .workspace-section (not the whole page) and absolutely
+   positioned within it, so it scrolls along with that section's content
+   like an ordinary landing-page background — never a fixed/parallax
+   layer, and never behind the hero or header. */
+
+.workspace-section {
+  position: relative;
+}
 
 .page-backdrop {
-  position: fixed;
+  position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
@@ -143,20 +151,12 @@ a {
 /* ---------- App shell ---------- */
 
 .app-shell {
-  position: relative;
-  z-index: 1;
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
 .app-shell__scroll {
-  /* Must be a positioned element (not just z-index:1 on its static-position
-     parent) — otherwise it paints in the CSS stacking order's "in-flow,
-     non-positioned" layer, which comes BEHIND the fixed-position, z-index:0
-     .page-backdrop regardless of DOM order, putting the decorative pattern
-     on top of real content instead of behind it. */
-  position: relative;
   flex: 1;
   overflow-y: auto;
 }
@@ -392,6 +392,10 @@ a {
 /* ---------- Workspace ---------- */
 
 .workspace {
+  /* Positioned (not just in-flow) so it paints above the absolutely
+     positioned .page-backdrop within .workspace-section — see the note
+     on .page-backdrop above. */
+  position: relative;
   max-width: var(--content-max-width);
   margin: 0 auto;
   display: grid;
