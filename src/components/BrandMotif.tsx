@@ -72,6 +72,18 @@ function Heart({ cx, cy, s, fill }: { cx: number; cy: number; s: number; fill: s
   );
 }
 
+function Star({ cx, cy, s, fill }: { cx: number; cy: number; s: number; fill: string }): JSX.Element {
+  return (
+    <path
+      d="M0 -30L9 -9L30 0L9 9L0 30L-9 9L-30 0L-9 -9Z"
+      fill={fill}
+      stroke="#06232d"
+      strokeWidth={s * 2.2}
+      transform={`translate(${cx} ${cy}) scale(${s}) rotate(${(cx * 37) % 40})`}
+    />
+  );
+}
+
 /**
  * Full-bleed hero illustration — covers the entire banner edge to edge
  * (via preserveAspectRatio="xMidYMid slice", like background-size: cover),
@@ -117,6 +129,37 @@ export function HeroIllustration(): JSX.Element {
         strokeWidth="4"
         opacity="0.85"
       />
+      <path
+        d="M-30 360C40 320 110 340 120 400C130 460 70 500 10 490C-50 480 -100 450 -90 410C-85 390 -65 372 -30 360Z"
+        fill="#e93622"
+        stroke="#06232d"
+        strokeWidth="4"
+        opacity="0.7"
+      />
+      <path
+        d="M680 -30C740 -50 820 -30 820 20C820 65 760 85 710 75C660 65 610 35 620 0C624 -15 650 -22 680 -30Z"
+        fill="#19a9d2"
+        stroke="#06232d"
+        strokeWidth="4"
+        opacity="0.75"
+      />
+      <path
+        d="M1500 320C1560 300 1630 330 1625 385C1620 435 1560 450 1515 430C1470 410 1440 380 1455 345C1462 330 1480 326 1500 320Z"
+        fill="#ff9f17"
+        stroke="#06232d"
+        strokeWidth="4"
+        opacity="0.6"
+      />
+
+      {/* Wavy ribbon, like a wind-blown hand/sash */}
+      <path
+        d="M-20 180C120 120 260 220 360 180C460 140 480 60 580 90C680 120 660 220 600 250"
+        stroke="#087ac0"
+        strokeWidth="46"
+        strokeLinecap="round"
+        fill="none"
+        opacity="0.55"
+      />
 
       {/* Ray-burst behind the main eye */}
       <g stroke="#06232d" strokeWidth="3" strokeLinejoin="round">
@@ -134,28 +177,28 @@ export function HeroIllustration(): JSX.Element {
       <Eye cx={800} cy={560} r={95} />
       <Eye cx={1310} cy={210} r={55} iris="#ff9f17" />
       <Eye cx={190} cy={640} r={46} iris="#e93622" />
+      <Eye cx={300} cy={470} r={38} iris="#19a9d2" />
+      <Eye cx={1230} cy={660} r={42} iris="#ff9f17" />
 
       <Heart cx={420} cy={150} s={1.3} fill="#e93622" />
       <Heart cx={1180} cy={470} s={1} fill="#ff9f17" />
       <Heart cx={1000} cy={160} s={0.8} fill="#fff4de" />
+      <Heart cx={110} cy={330} s={0.75} fill="#ff9f17" />
+      <Heart cx={1490} cy={230} s={0.9} fill="#e93622" />
+      <Heart cx={760} cy={720} s={0.7} fill="#19a9d2" />
+
+      <Star cx={560} cy={610} s={0.9} fill="#fff4de" />
+      <Star cx={1260} cy={600} s={1.1} fill="#ff9f17" />
+      <Star cx={330} cy={210} s={0.7} fill="#19a9d2" />
+      <Star cx={920} cy={300} s={0.6} fill="#e93622" />
+      <Star cx={1440} cy={650} s={0.65} fill="#fff4de" />
+      <Star cx={60} cy={560} s={0.75} fill="#ff9f17" />
 
       {/* Eyelash squiggle accents */}
-      <path
-        d="M620 240C640 225 660 225 680 240"
-        stroke="#fff4de"
-        strokeWidth="5"
-        strokeLinecap="round"
-        fill="none"
-        opacity="0.8"
-      />
-      <path
-        d="M980 650C1000 635 1020 635 1040 650"
-        stroke="#fff4de"
-        strokeWidth="5"
-        strokeLinecap="round"
-        fill="none"
-        opacity="0.7"
-      />
+      <path d="M620 240C640 225 660 225 680 240" stroke="#fff4de" strokeWidth="5" strokeLinecap="round" fill="none" opacity="0.8" />
+      <path d="M980 650C1000 635 1020 635 1040 650" stroke="#fff4de" strokeWidth="5" strokeLinecap="round" fill="none" opacity="0.7" />
+      <path d="M1180 120C1198 106 1216 106 1234 120" stroke="#06232d" strokeWidth="5" strokeLinecap="round" fill="none" opacity="0.6" />
+      <path d="M90 230C108 216 126 216 144 230" stroke="#06232d" strokeWidth="5" strokeLinecap="round" fill="none" opacity="0.6" />
 
       {/* Dot clusters */}
       <g fill="#ff9f17">
@@ -169,15 +212,31 @@ export function HeroIllustration(): JSX.Element {
         <circle cx="1120" cy="644" r="7" />
         <circle cx="1146" cy="644" r="7" />
       </g>
+      <g fill="#fff4de">
+        <circle cx="1500" cy="520" r="7" />
+        <circle cx="1524" cy="520" r="7" />
+        <circle cx="1512" cy="542" r="7" />
+      </g>
+      <g fill="#e93622">
+        <circle cx="240" cy="110" r="6" />
+        <circle cx="262" cy="110" r="6" />
+        <circle cx="251" cy="130" r="6" />
+      </g>
 
       {/* Oval pills, like scattered confetti */}
       <ellipse cx="300" cy="300" rx="34" ry="16" fill="#fff4de" stroke="#06232d" strokeWidth="3" transform="rotate(-18 300 300)" />
       <ellipse cx="1420" cy="420" rx="30" ry="14" fill="#fff4de" stroke="#06232d" strokeWidth="3" transform="rotate(12 1420 420)" />
       <ellipse cx="900" cy="700" rx="26" ry="13" fill="#fff4de" stroke="#06232d" strokeWidth="3" transform="rotate(-8 900 700)" />
+      <ellipse cx="700" cy="60" rx="24" ry="12" fill="#fff4de" stroke="#06232d" strokeWidth="3" transform="rotate(20 700 60)" />
+      <ellipse cx="1140" cy="740" rx="28" ry="13" fill="#fff4de" stroke="#06232d" strokeWidth="3" transform="rotate(-14 1140 740)" />
+      <ellipse cx="40" cy="480" rx="22" ry="11" fill="#fff4de" stroke="#06232d" strokeWidth="3" transform="rotate(10 40 480)" />
 
       {/* Ring accents */}
       <circle cx="1060" cy="330" r="22" fill="none" stroke="#fff4de" strokeWidth="3" opacity="0.6" />
       <circle cx="430" cy="600" r="16" fill="none" stroke="#fff4de" strokeWidth="3" opacity="0.6" />
+      <circle cx="660" cy="660" r="14" fill="none" stroke="#06232d" strokeWidth="3" opacity="0.5" />
+      <circle cx="1500" cy="130" r="18" fill="none" stroke="#06232d" strokeWidth="3" opacity="0.5" />
+      <circle cx="980" cy="100" r="12" fill="none" stroke="#fff4de" strokeWidth="3" opacity="0.5" />
     </svg>
   );
 }
