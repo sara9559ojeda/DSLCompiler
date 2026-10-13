@@ -191,30 +191,30 @@ export function HeroIllustration(): JSX.Element {
       <Eye cx={800} cy={560} r={95} iris="#19a9d2" />
 
       {/* Secondary eyes — each iris picked to contrast with whatever blob/
-          neighbor it sits closest to, never repeating it. */}
-      <Eye cx={1310} cy={210} r={55} iris="#e93622" />
+          neighbor it sits closest to, never repeating it. Kept clear of
+          x>1080: that's where the real portrait (HeroCharacter) sits in
+          .hero__inner, drawn on top — anything placed back there would
+          either be fully hidden or crowd its edges for nothing. */}
       <Eye cx={190} cy={640} r={46} iris="#19a9d2" />
       <Eye cx={300} cy={440} r={36} iris="#ff9f17" />
-      <Eye cx={1230} cy={660} r={42} iris="#ff9f17" />
 
+      {/* This one stays despite x>1080 — it sits clearly beside the
+          portrait's head, not behind it, and reads as an intentional
+          accent rather than clutter. */}
       <ConcentricBlob cx={1030} cy={195} s={1.2} />
       <ConcentricBlob cx={480} cy={640} s={0.75} />
 
       <Heart cx={450} cy={130} s={1.1} fill="#e93622" />
-      <Heart cx={1180} cy={460} s={0.9} fill="#19a9d2" />
-      <Heart cx={1490} cy={240} s={0.85} fill="#fff4de" />
       <Heart cx={110} cy={340} s={0.7} fill="#ff9f17" />
       <Heart cx={870} cy={90} s={0.7} fill="#ff9f17" />
 
       <Star cx={330} cy={200} s={0.7} fill="#19a9d2" rotate={10} />
       <Star cx={930} cy={260} s={0.6} fill="#e93622" rotate={-15} />
-      <Star cx={1390} cy={560} s={0.7} fill="#fff4de" rotate={20} />
       <Star cx={65} cy={560} s={0.75} fill="#ff9f17" rotate={-8} />
 
       {/* Eyelash squiggles — sit on top of the colored blobs, where a dark
           outline reads clearly (never placed over bare navy). */}
       <path d="M620 240C640 225 660 225 680 240" stroke="#fff4de" strokeWidth="5" strokeLinecap="round" fill="none" opacity="0.8" />
-      <path d="M1180 120C1198 106 1216 106 1234 120" stroke="#06232d" strokeWidth="5" strokeLinecap="round" fill="none" opacity="0.6" />
       <path d="M90 230C108 216 126 216 144 230" stroke="#06232d" strokeWidth="5" strokeLinecap="round" fill="none" opacity="0.6" />
 
       {/* Dot clusters */}
@@ -222,12 +222,6 @@ export function HeroIllustration(): JSX.Element {
         <circle cx="520" cy="420" r="9" />
         <circle cx="552" cy="420" r="9" />
         <circle cx="536" cy="448" r="9" />
-      </g>
-      <g fill="#fff4de">
-        <circle cx="1120" cy="610" r="7" />
-        <circle cx="1146" cy="610" r="7" />
-        <circle cx="1120" cy="634" r="7" />
-        <circle cx="1146" cy="634" r="7" />
       </g>
       <g fill="#e93622">
         <circle cx="240" cy="110" r="6" />
@@ -243,7 +237,6 @@ export function HeroIllustration(): JSX.Element {
       {/* Oval pills — deliberately all cream, a neutral "confetti" accent
           that never competes for a color slot with its neighbors. */}
       <ellipse cx="300" cy="300" rx="34" ry="16" fill="#fff4de" stroke="#06232d" strokeWidth="3" transform="rotate(-18 300 300)" />
-      <ellipse cx="1420" cy="420" rx="30" ry="14" fill="#fff4de" stroke="#06232d" strokeWidth="3" transform="rotate(12 1420 420)" />
       <ellipse cx="900" cy="700" rx="26" ry="13" fill="#fff4de" stroke="#06232d" strokeWidth="3" transform="rotate(-8 900 700)" />
       <ellipse cx="700" cy="60" rx="24" ry="12" fill="#fff4de" stroke="#06232d" strokeWidth="3" transform="rotate(20 700 60)" />
       <ellipse cx="40" cy="480" rx="22" ry="11" fill="#fff4de" stroke="#06232d" strokeWidth="3" transform="rotate(10 40 480)" />
@@ -252,8 +245,6 @@ export function HeroIllustration(): JSX.Element {
           translucent stroke here blended into a dull gray smudge instead
           of reading as a crisp ring. */}
       <circle cx="430" cy="580" r="16" fill="none" stroke="#fff4de" strokeWidth="4" />
-      <circle cx="1480" cy="150" r="18" fill="none" stroke="#fff4de" strokeWidth="4" />
-      <circle cx="1120" cy="230" r="13" fill="none" stroke="#fff4de" strokeWidth="4" />
     </svg>
   );
 }
