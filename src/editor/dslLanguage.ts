@@ -1,4 +1,5 @@
 import type * as Monaco from "monaco-editor";
+import { completionsAt, type CompletionKind } from "./dslCompletions.js";
 
 export const DSL_LANGUAGE_ID = "compiler-img-dsl";
 
@@ -21,6 +22,44 @@ export function registerDslLanguage(monaco: typeof Monaco): void {
         [/[a-zA-Z_]\w*/, "identifier"],
         [/[=(),;]/, "delimiter"],
       ],
+    },
+  });
+
+  const kinds: Readonly<Record<CompletionKind, Monaco.languages.CompletionItemKind>> = {
+    command: monaco.languages.CompletionItemKind.Function,
+    param: monaco.languages.CompletionItemKind.Property,
+    value: monaco.languages.CompletionItemKind.EnumMember,
+    shape: monaco.languages.CompletionItemKind.Variable,
+  };
+
+  monaco.languages.registerCompletionItemProvider(DSL_LANGUAGE_ID, {
+    triggerCharacters: ["(", ",", "=", " "],
+    provideCompletionItems(model, position) {
+      const textBeforeCursor = model.getValueInRange({
+        startLineNumber: 1,
+        startColumn: 1,
+        endLineNumber: position.lineNumber,
+        endColumn: position.column,
+      });
+      const word = model.getWordUntilPosition(position);
+      const range = {
+        startLineNumber: position.lineNumber,
+        endLineNumber: position.lineNumber,
+        startColumn: word.startColumn,
+        endColumn: word.endColumn,
+      };
+      return {
+        suggestions: completionsAt(textBeforeCursor, model.getValue()).map((item, index) => ({
+          label: item.label,
+          // Keep completionsAt's order (e.g. declared shapes before params) instead of alphabetical.
+          sortText: String(index).padStart(4, "0"),
+          kind: kinds[item.kind],
+          detail: item.detail,
+          insertText: item.insertText,
+          insertTextRules: item.isSnippet ? monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet : undefined,
+          range,
+        })),
+      };
     },
   });
 

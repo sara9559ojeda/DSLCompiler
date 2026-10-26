@@ -10,7 +10,7 @@ class FakeWorker {
   }
 
   respond(id: number, result: unknown): void {
-    this.onmessage?.({ data: { id, result } } as MessageEvent);
+    this.onmessage?.({ data: { id, result, inspection: { tokens: [] } } } as MessageEvent);
   }
 
   terminate(): void {}
@@ -27,7 +27,7 @@ describe("CompilerWorkerClient", () => {
 
     worker.respond(worker.sent[0]!.id, { success: true, svg: "<svg></svg>", diagnostics: [] });
 
-    await expect(promise).resolves.toMatchObject({ success: true });
+    await expect(promise).resolves.toMatchObject({ result: { success: true }, inspection: { tokens: [] } });
   });
 
   it("correlates concurrent requests by id instead of resolving in send order", async () => {
@@ -41,7 +41,7 @@ describe("CompilerWorkerClient", () => {
     worker.respond(secondId!, { success: true, svg: "second", diagnostics: [] });
     worker.respond(firstId!, { success: true, svg: "first", diagnostics: [] });
 
-    await expect(firstPromise).resolves.toMatchObject({ svg: "first" });
-    await expect(secondPromise).resolves.toMatchObject({ svg: "second" });
+    await expect(firstPromise).resolves.toMatchObject({ result: { svg: "first" } });
+    await expect(secondPromise).resolves.toMatchObject({ result: { svg: "second" } });
   });
 });

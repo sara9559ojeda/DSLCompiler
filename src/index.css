@@ -895,6 +895,214 @@ a {
   color: var(--color-warning);
 }
 
+.diagnostics__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.diagnostics__jump {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.diagnostics__jump:hover span:last-child {
+  text-decoration: underline;
+}
+
+.diagnostics__jump:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.diagnostics__code {
+  padding: 0 var(--space-1);
+  border: 1px solid currentColor;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.diagnostics__snippet {
+  margin: 0;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--color-error-bg);
+  color: var(--color-text);
+  font: inherit;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.diagnostics__suggestion {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-1);
+  margin: 0;
+  color: var(--color-text);
+  font-family: var(--font-sans);
+}
+
+.diagnostics__suggestion svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--color-warning);
+}
+
+/* ---------- Preview tabs + Inspector ---------- */
+
+.preview-tabs,
+.inspector__sections {
+  display: flex;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.preview-tabs__tab,
+.inspector__section {
+  padding: var(--space-1) var(--space-3);
+  border: 2px solid var(--color-border-bold);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-alt);
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.inspector__section {
+  border-width: 1px;
+  font-weight: 500;
+}
+
+.preview-tabs__tab--active,
+.inspector__section--active {
+  background: var(--color-action-bg);
+  color: var(--color-action-text);
+}
+
+.preview-tabs__tab:focus-visible,
+.inspector__section:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* `contain: size` keeps a long AST/token list from stretching the panel
+   (and the editor next to it): the inspector fills whatever height the
+   layout gives the preview and scrolls inside it. */
+.preview-panel--inspector {
+  display: block;
+  contain: size;
+  min-height: 320px;
+}
+
+.inspector {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.inspector__content {
+  padding: var(--space-3) var(--space-4);
+  font-size: 0.8125rem;
+}
+
+.inspector__timings,
+.inspector__passes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.inspector__timings li {
+  display: grid;
+  grid-template-columns: 8.5rem 1fr auto;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.inspector__bar {
+  display: block;
+  block-size: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--color-action-accent);
+}
+
+.inspector__passes {
+  margin-top: var(--space-2);
+}
+
+.inspector__passes li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.inspector__ms {
+  font-family: var(--font-mono);
+  color: var(--color-text-muted);
+}
+
+.inspector__note {
+  margin: var(--space-3) 0 0;
+  color: var(--color-text-muted);
+}
+
+.inspector__heading {
+  margin: var(--space-3) 0 var(--space-1);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.inspector__heading:first-child {
+  margin-top: 0;
+}
+
+.inspector__code {
+  margin: 0;
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.inspector__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.inspector__table th,
+.inspector__table td {
+  padding: var(--space-1) var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+}
+
+.inspector__table th {
+  font-family: var(--font-sans);
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
 .spin {
   animation: compiler-img-spin 0.8s linear infinite;
 }

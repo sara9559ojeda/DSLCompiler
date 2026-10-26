@@ -35,9 +35,9 @@ export function useCompilerSync(): void {
       const requestId = ++latestRequestRef.current;
       setIsCompiling(true);
 
-      client.compile(source).then((result) => {
+      client.compile(source).then(({ result, inspection }) => {
         if (requestId !== latestRequestRef.current) return; // a newer keystroke superseded this one
-        setResult(result);
+        setResult(result, inspection);
         setIsCompiling(false);
       });
     }, COMPILE_DEBOUNCE_MS);
