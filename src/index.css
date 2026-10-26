@@ -560,6 +560,107 @@ a {
   color: var(--color-warning);
 }
 
+/* ---------- Preset gallery ---------- */
+
+.presets {
+  /* Columns follow the panel's own width (it changes when the sidebar
+     drops below the workspace), not the viewport's. */
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4) var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.presets__label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+/* Column counts that divide the 8 presets evenly (2 / 4 / 8), so a row
+   never ends with a lone orphan card. One compact row when the panel is
+   wide, so the gallery doesn't push the editor off screen. */
+.presets__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+@container (min-width: 420px) {
+  .presets__list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@container (min-width: 820px) {
+  .presets__list {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: var(--space-2);
+  }
+}
+
+.presets__list > li {
+  display: flex;
+}
+
+.preset-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border: 2px solid var(--color-border-bold);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-alt);
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-align: left;
+  transition: transform 0.12s ease, border-color 0.12s ease;
+}
+
+.preset-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-focus);
+}
+
+.preset-card:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.preset-card--active {
+  border-color: var(--color-action-accent);
+}
+
+.preset-card__thumb {
+  display: block;
+  aspect-ratio: 4 / 3;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.preset-card__thumb svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Wraps instead of truncating — "Muñeco de nieve" / "Diagrama de flujo"
+   take two lines in the compact 8-column row rather than losing words. */
+.preset-card__name {
+  padding: 0 var(--space-1) var(--space-1);
+  line-height: 1.25;
+}
+
 /* ---------- Buttons ---------- */
 
 .button {

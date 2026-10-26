@@ -5,6 +5,7 @@ interface AppLayoutProps {
   readonly header: ReactNode;
   readonly hero: ReactNode;
   readonly aiBar: ReactNode;
+  readonly presets: ReactNode;
   readonly editor: ReactNode;
   readonly preview: ReactNode;
   readonly diagnostics: ReactNode;
@@ -16,6 +17,7 @@ export function AppLayout({
   header,
   hero,
   aiBar,
+  presets,
   editor,
   preview,
   diagnostics,
@@ -41,6 +43,7 @@ export function AppLayout({
                   <h2 className="panel__title">Escribe o genera tu diagrama</h2>
                 </header>
                 {aiBar}
+                {presets}
               </div>
               <div className="workspace__editors" id="compilar">
                 <div className="panel panel--flush">

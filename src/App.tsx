@@ -7,6 +7,7 @@ import { Hero } from "./components/Hero.js";
 import { AiGenerateBar } from "./components/AiGenerateBar.js";
 import { ExportPanel } from "./components/ExportPanel.js";
 import { ExportHistoryPanel } from "./components/ExportHistoryPanel.js";
+import { PresetGallery } from "./components/PresetGallery.js";
 import { useCompilerSync } from "./compiler/useCompilerSync.js";
 
 export function App(): JSX.Element {
@@ -17,6 +18,7 @@ export function App(): JSX.Element {
       header={<Header />}
       hero={<Hero />}
       aiBar={<AiGenerateBar />}
+      presets={<PresetGallery />}
       editor={<CodeEditor />}
       preview={<PreviewPanel />}
       diagnostics={<DiagnosticsList />}
