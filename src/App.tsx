@@ -8,6 +8,7 @@ import { AiGenerateBar } from "./components/AiGenerateBar.js";
 import { ExportPanel } from "./components/ExportPanel.js";
 import { ExportHistoryPanel } from "./components/ExportHistoryPanel.js";
 import { PresetGallery } from "./components/PresetGallery.js";
+import { Footer } from "./components/Footer.js";
 import { useCompilerSync } from "./compiler/useCompilerSync.js";
 
 export function App(): JSX.Element {
@@ -24,6 +25,7 @@ export function App(): JSX.Element {
       diagnostics={<DiagnosticsList />}
       exportPanel={<ExportPanel />}
       exportHistory={<ExportHistoryPanel />}
+      footer={<Footer />}
     />
   );
 }

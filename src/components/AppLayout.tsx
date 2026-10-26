@@ -11,6 +11,7 @@ interface AppLayoutProps {
   readonly diagnostics: ReactNode;
   readonly exportPanel: ReactNode;
   readonly exportHistory: ReactNode;
+  readonly footer: ReactNode;
 }
 
 export function AppLayout({
@@ -23,6 +24,7 @@ export function AppLayout({
   diagnostics,
   exportPanel,
   exportHistory,
+  footer,
 }: AppLayoutProps): JSX.Element {
   return (
     <div className="app-shell">
@@ -83,6 +85,7 @@ export function AppLayout({
             </aside>
           </main>
         </div>
+        {footer}
       </div>
     </div>
   );

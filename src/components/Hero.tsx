@@ -4,7 +4,7 @@ import { HeroCharacter } from "./HeroCharacter.js";
 
 export function Hero(): JSX.Element {
   return (
-    <section className="hero">
+    <section className="hero" id="top">
       <HeroIllustration />
       <div className="hero__inner">
         <div className="hero__textbox">

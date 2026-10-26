@@ -34,6 +34,13 @@ export const PNG_EXPORT_FILENAME = "diagrama.png";
 
 export const BRAND_NAME = "Compilador de Imágenes";
 
+/** External links shown in the footer. */
+export const PROJECT_LINKS: readonly { readonly label: string; readonly href: string }[] = [
+  { label: "Frontend", href: "https://github.com/sara9559ojeda/DSLCompiler" },
+  { label: "Backend", href: "https://github.com/sara9559ojeda/DSLCompiler_Backend" },
+  { label: "Paquete npm", href: "https://www.npmjs.com/package/@saramariaojeda9559/compiler-core" },
+];
+
 /** localStorage key for the export history panel — see useExportHistoryStore.ts. */
 export const EXPORT_HISTORY_STORAGE_KEY = "compiler-img:export-history";
 /** Oldest entries are dropped once the list grows past this, to keep localStorage bounded (PNG entries embed a base64 data URL). */
