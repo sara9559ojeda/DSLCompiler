@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
-import { CompilerWorkerClient } from "./CompilerWorkerClient.js";
+import { CompileCancelledError, CompilerWorkerClient } from "./CompilerWorkerClient.js";
 import { useEditorStore } from "../state/useEditorStore.js";
-import { COMPILE_DEBOUNCE_MS } from "../config/app.config.js";
+import { COMPILE_CANCEL_AFTER_MS, COMPILE_DEBOUNCE_MS, COMPILE_TIMEOUT_MS } from "../config/app.config.js";
 
 /**
  * Keeps `result`/`isCompiling` in sync with `source`: debounced, and run
@@ -19,8 +19,12 @@ export function useCompilerSync(): void {
   const latestRequestRef = useRef(0);
 
   useEffect(() => {
-    const worker = new Worker(new URL("./compiler.worker.ts", import.meta.url), { type: "module" });
-    clientRef.current = new CompilerWorkerClient(worker);
+    const createWorker = (): Worker => new Worker(new URL("./compiler.worker.ts", import.meta.url), { type: "module" });
+    clientRef.current = new CompilerWorkerClient(createWorker(), {
+      createWorker,
+      cancelAfterMs: COMPILE_CANCEL_AFTER_MS,
+      timeoutMs: COMPILE_TIMEOUT_MS,
+    });
     return () => {
       clientRef.current?.terminate();
       clientRef.current = null;
@@ -35,11 +39,17 @@ export function useCompilerSync(): void {
       const requestId = ++latestRequestRef.current;
       setIsCompiling(true);
 
-      client.compile(source).then(({ result, inspection }) => {
-        if (requestId !== latestRequestRef.current) return; // a newer keystroke superseded this one
-        setResult(result, inspection);
-        setIsCompiling(false);
-      });
+      client
+        .compile(source)
+        .then(({ result, inspection }) => {
+          if (requestId !== latestRequestRef.current) return; // a newer keystroke superseded this one
+          setResult(result, inspection);
+          setIsCompiling(false);
+        })
+        .catch((error: unknown) => {
+          // Cancelled because a newer compile replaced it: that one will report. Anything else is a real failure.
+          if (!(error instanceof CompileCancelledError)) setIsCompiling(false);
+        });
     }, COMPILE_DEBOUNCE_MS);
 
     return () => window.clearTimeout(timeoutId);
