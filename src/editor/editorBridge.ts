@@ -53,3 +53,81 @@ export function setDiagnosticMarkers(diagnostics: readonly Diagnostic[]): void {
 
   monaco.editor.setModelMarkers(model, MARKER_OWNER, markers);
 }
+
+// ── Visual editing ──────────────────────────────────────────────────────────
+
+const VISUAL_EDIT_SOURCE = "visual-editor";
+
+/** True while the bridge itself moves the selection/cursor, so its own events aren't mistaken for the user's. */
+let programmatic = false;
+
+/**
+ * Applies the visual editor's minimal text changes (offsets into the model's
+ * current text) as ONE undoable edit: Ctrl+Z in Monaco reverts the whole
+ * drag. Returns false when there is no editor to apply them to.
+ */
+export function applyTextChanges(changes: readonly { start: number; end: number; text: string }[]): boolean {
+  if (!instance) return false;
+  const { editor, monaco } = instance;
+  const model = editor.getModel();
+  if (!model) return false;
+  const edits = changes.map(({ start, end, text }) => {
+    const from = model.getPositionAt(start);
+    const to = model.getPositionAt(end);
+    return {
+      range: new monaco.Range(from.lineNumber, from.column, to.lineNumber, to.column),
+      text,
+      forceMoveMarkers: true,
+    };
+  });
+  programmatic = true;
+  try {
+    editor.pushUndoStop();
+    editor.executeEdits(VISUAL_EDIT_SOURCE, edits);
+    editor.pushUndoStop();
+  } finally {
+    programmatic = false;
+  }
+  return true;
+}
+
+/** Highlights `[start, end)` in the editor and scrolls to it, without stealing focus from the canvas. */
+export function selectSpan(span: { start: number; end: number }, focus = false): void {
+  if (!instance) return;
+  const { editor, monaco } = instance;
+  const model = editor.getModel();
+  if (!model) return;
+  const from = model.getPositionAt(span.start);
+  const to = model.getPositionAt(span.end);
+  programmatic = true;
+  try {
+    const range = new monaco.Range(from.lineNumber, from.column, to.lineNumber, to.column);
+    editor.setSelection(range);
+    editor.revealRangeInCenterIfOutsideViewport(range);
+  } finally {
+    programmatic = false;
+  }
+  if (focus) editor.focus();
+}
+
+/** Calls `listener` with the cursor's offset whenever the USER moves it (not when the bridge does). */
+export function onUserCursor(listener: (offset: number) => void): () => void {
+  if (!instance) return () => undefined;
+  const { editor } = instance;
+  const subscription = editor.onDidChangeCursorPosition((event) => {
+    if (programmatic) return;
+    const model = editor.getModel();
+    if (!model) return;
+    if (event.source === VISUAL_EDIT_SOURCE) return;
+    listener(model.getOffsetAt(event.position));
+  });
+  return () => subscription.dispose();
+}
+
+export function undoEdit(): void {
+  instance?.editor.trigger(VISUAL_EDIT_SOURCE, "undo", null);
+}
+
+export function redoEdit(): void {
+  instance?.editor.trigger(VISUAL_EDIT_SOURCE, "redo", null);
+}

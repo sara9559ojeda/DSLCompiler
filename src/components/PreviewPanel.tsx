@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useEditorStore } from "../state/useEditorStore.js";
+import { CanvasStage } from "./CanvasStage.js";
 import { InspectorPanel } from "./InspectorPanel.js";
+import { SelectionInspector } from "./SelectionInspector.js";
 
 type PreviewTab = "vista" | "inspector";
 
 export function PreviewPanel(): JSX.Element {
   const result = useEditorStore((s) => s.result);
-  const svg = result?.success ? result.svg : null;
   const [tab, setTab] = useState<PreviewTab>("vista");
 
   return (
@@ -32,15 +33,14 @@ export function PreviewPanel(): JSX.Element {
         </button>
       </div>
       {tab === "vista" ? (
-        <div className="preview-panel" aria-live="polite" role="tabpanel">
-          {svg ? (
-            <div className="preview-panel__canvas" dangerouslySetInnerHTML={{ __html: svg }} />
+        <div className="preview-panel preview-panel--stage" role="tabpanel">
+          {result ? (
+            <>
+              <CanvasStage />
+              <SelectionInspector />
+            </>
           ) : (
-            <p className="preview-panel__empty">
-              {result
-                ? "Corrige los errores para ver la previsualización."
-                : "Escribe un programa para ver la previsualización."}
-            </p>
+            <p className="preview-panel__empty">Escribe un programa para ver la previsualización.</p>
           )}
         </div>
       ) : (

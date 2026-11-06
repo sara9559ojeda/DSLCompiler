@@ -1,6 +1,6 @@
 import { createDefaultPipeline, DEFAULT_SCENE_PASSES, SceneOptimizer, type StageTiming } from "@saramariaojeda9559/compiler-core";
 import type { Inspection } from "./inspection.js";
-import { COMPILE_DEADLINE_MS } from "../config/app.config.js";
+import { COMPILE_DEADLINE_MS } from "../config/compile.config.js";
 
 interface CompileRequestMessage {
   readonly type: "compile";

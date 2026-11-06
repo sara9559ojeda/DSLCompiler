@@ -4,6 +4,7 @@ import { useTheme } from "../theme/ThemeProvider.js";
 import { DSL_LANGUAGE_ID } from "../editor/dslLanguage.js";
 import { MONACO_DARK_THEME, MONACO_LIGHT_THEME } from "../editor/monacoThemes.js";
 import { registerEditor, setDiagnosticMarkers } from "../editor/editorBridge.js";
+import { useSelectionSync } from "../editing/useSelectionSync.js";
 
 // Monaco is ~3.5MB — code-split into its own chunk instead of the initial
 // bundle. Both imports below must stay dynamic: `monaco-editor` itself is
@@ -28,6 +29,8 @@ export function CodeEditor(): JSX.Element {
   const diagnostics = useEditorStore((s) => s.result?.diagnostics);
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
+
+  useSelectionSync(mounted);
 
   useEffect(() => {
     if (mounted) setDiagnosticMarkers(diagnostics ?? []);

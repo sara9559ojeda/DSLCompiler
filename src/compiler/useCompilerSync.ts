@@ -43,7 +43,7 @@ export function useCompilerSync(): void {
         .compile(source)
         .then(({ result, inspection }) => {
           if (requestId !== latestRequestRef.current) return; // a newer keystroke superseded this one
-          setResult(result, inspection);
+          setResult(result, inspection, source);
           setIsCompiling(false);
         })
         .catch((error: unknown) => {
