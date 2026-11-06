@@ -12,7 +12,10 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "core:local": "node scripts/use-local-core.mjs local",
+    "core:published": "node scripts/use-local-core.mjs published",
+    "core:status": "node scripts/use-local-core.mjs status"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.6.0",
