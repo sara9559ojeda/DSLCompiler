@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import {
+  DIAGRAM_DEFINITION,
   GROUP_DEFINITION,
   NAMED_COLORS,
   SHAPE_DEFINITIONS,
@@ -11,7 +12,7 @@ import { findTarget } from "../editing/visualEdit.js";
 import { selectSpan } from "../editor/editorBridge.js";
 import { useEditorStore } from "../state/useEditorStore.js";
 
-const DEFINITIONS = new Map([...SHAPE_DEFINITIONS, GROUP_DEFINITION].map((definition) => [definition.name, definition]));
+const DEFINITIONS = new Map([...SHAPE_DEFINITIONS, GROUP_DEFINITION, DIAGRAM_DEFINITION].map((definition) => [definition.name, definition]));
 const COLOR_DEBOUNCE_MS = 450;
 
 /**
@@ -38,10 +39,17 @@ export function SelectionInspector(): JSX.Element | null {
   }
 
   const id = target.kind === "shape" ? target.shape.id : target.group.id;
-  const kind = target.kind === "shape" ? target.shape.kind : "grupo";
-  const values: Readonly<Record<string, ParamValue>> = target.kind === "shape" ? target.shape.params : target.group.params;
+  const diagram = target.kind === "group" ? target.group.diagram : undefined;
+  const kind = target.kind === "shape" ? target.shape.kind : diagram ? "diagrama" : "grupo";
+  const values: Readonly<Record<string, ParamValue>> =
+    target.kind === "shape"
+      ? target.shape.params
+      : diagram
+        ? { ...target.group.params, direccion: diagram.direction, espaciado: diagram.spacing }
+        : target.group.params;
   const definition = DEFINITIONS.get(kind);
   const origin = target.origin;
+  const pinnedNode = kind === "nodo" && (origin?.params.x?.editability !== "default" || origin?.params.y?.editability !== "default");
   const locked = Boolean(origin?.dynamic) && !allowShared;
   const fields = (definition?.params ?? []).filter((param) => param.type !== "shapeRef");
 
@@ -64,6 +72,29 @@ export function SelectionInspector(): JSX.Element | null {
           Eliminar
         </button>
       </header>
+
+      {diagram && (
+        <p className="selection__shared" role="note">
+          Diagrama de {diagram.type}: {diagram.autoNodes.length} nodos automáticos, {diagram.pinnedNodes.length} fijados a mano.
+          <button
+            type="button"
+            disabled={diagram.pinnedNodes.length === 0}
+            onClick={() => applyVisualEdit({ kind: "resetLayout", targetId: id })}
+          >
+            Restablecer layout
+          </button>
+        </p>
+      )}
+      {kind === "nodo" && (
+        <p className="selection__shared" role="note">
+          Posición: {pinnedNode ? "fijada a mano (x/y en el código)" : "automática"}.
+          {pinnedNode && (
+            <button type="button" disabled={locked} onClick={() => applyVisualEdit({ kind: "removeParams", targetId: id, params: ["x", "y"], allowShared })}>
+              Volver al layout automático
+            </button>
+          )}
+        </p>
+      )}
 
       {origin?.dynamic && (
         <p className="selection__shared" role="note">
@@ -134,6 +165,15 @@ function Field({ param, value, disabled, note, onGoToCode, onCommit }: FieldProp
       <label htmlFor={id}>{param.name}</label>
       {param.type === "color" ? (
         <ColorField id={id} value={shown} disabled={disabled} onCommit={onCommit} />
+      ) : param.allowedValues ? (
+        <select id={id} value={shown} disabled={disabled} onChange={(event) => onCommit(event.target.value)}>
+          {shown === "" && <option value="" />}
+          {param.allowedValues.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
       ) : (
         <input
           id={id}

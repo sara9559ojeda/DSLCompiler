@@ -194,6 +194,7 @@ function keywordSnippets(): DslCompletion[] {
     ),
     snippet("si", "si (${1:condicion}) {\n\t$0\n}", "Condicional"),
     snippet("funcion", "funcion ${1:nombre}(${2:a, b}) {\n\t$0\n}", "Define una función reutilizable"),
+    snippet("diagrama", 'diagrama ${1|flujo,arquitectura,organigrama,proceso,red|} {\n\t${2:a} = nodo("${3:Inicio}");\n\t$0\n}', "Diagrama con layout automático"),
     snippet("grupo", "grupo(x=${1:0}, y=${2:0}) {\n\t$0\n}", "Agrupa figuras con una transformación"),
     snippet("retornar", "retornar ${1:valor};", "Devuelve un valor de la función"),
   ];
@@ -328,6 +329,8 @@ const KEYWORD_DOCS: Readonly<Record<string, string>> = {
   si: "`si (condicion) { ... } sino { ... }` — ejecuta según la condición (≠ 0 es verdadera).",
   sino: "Rama alternativa de `si`.",
   retornar: "`retornar valor;` — devuelve un valor desde una función.",
+  diagrama:
+    "`diagrama <tipo> { nodo(...); conectar(a, b); }` — dibuja nodos y conexiones con layout automático. Tipos: flujo, arquitectura, organigrama, proceso, red. Opciones: `direccion` (vertical/horizontal), `espaciado`, `x`, `y`.",
   grupo: "`grupo(x, y, escala, rotacion, opacidad) { ... }` — aplica una transformación a las figuras del bloque. Los ángulos van en grados.",
 };
 

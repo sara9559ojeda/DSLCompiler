@@ -1315,7 +1315,7 @@ a {
 .canvas-stage {
   position: relative;
   flex: 1;
-  min-height: 300px;
+  min-height: 380px;
   display: flex;
   flex-direction: column;
 }

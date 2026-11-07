@@ -435,6 +435,83 @@ const ARBOL_FRACTAL = lines(
   "rama(400, 570, 110, 90, 7);",
 );
 
+
+// ---- Smart diagrams (automatic layout) ----
+
+const DIAGRAMA_FLUJO = lines(
+  "// Diagrama de flujo: el layout coloca los nodos; arrastra uno para fijarlo.",
+  "diagrama flujo {",
+  '  comienzo = nodo("Inicio", tipo=inicio, color=verde);',
+  '  datos = nodo("Leer datos");',
+  '  valido = nodo("¿Datos válidos?", tipo=decision, color=amarillo);',
+  '  guardar = nodo("Guardar");',
+  '  error = nodo("Mostrar error", color=rojo);',
+  '  fin = nodo("Fin", tipo=inicio, color=verde);',
+  "  conectar(comienzo, datos);",
+  "  conectar(datos, valido);",
+  '  conectar(valido, guardar, etiqueta="sí");',
+  '  conectar(valido, error, etiqueta="no");',
+  "  conectar(guardar, fin);",
+  "  conectar(error, datos);",
+  "}",
+);
+
+const DIAGRAMA_ARQUITECTURA = lines(
+  "// Arquitectura del proyecto: Vercel → Gateway (Render) → Compilador por gRPC.",
+  'diagrama arquitectura(direccion="horizontal", espaciado=90) {',
+  '  front = nodo("Frontend Vercel", color=celeste);',
+  '  gateway = nodo("Gateway Fastify", color=naranja);',
+  '  compilador = nodo("Compilador gRPC", color=verde);',
+  '  ia = nodo("Servicio IA", color=morado);',
+  '  conectar(front, gateway, etiqueta="HTTPS");',
+  '  conectar(gateway, compilador, etiqueta="gRPC 127.0.0.1");',
+  '  conectar(gateway, ia, etiqueta="HTTP");',
+  "}",
+);
+
+const DIAGRAMA_ORGANIGRAMA = lines(
+  "// Organigrama: un nodo por persona, conectado a su jefatura.",
+  "diagrama organigrama {",
+  '  dir = nodo("Dirección", color=azul);',
+  '  tec = nodo("Tecnología", color=celeste);',
+  '  ops = nodo("Operaciones", color=celeste);',
+  '  dev = nodo("Desarrollo");',
+  '  qa = nodo("Calidad");',
+  '  log = nodo("Logística");',
+  "  conectar(dir, tec);",
+  "  conectar(dir, ops);",
+  "  conectar(tec, dev);",
+  "  conectar(tec, qa);",
+  "  conectar(ops, log);",
+  "}",
+);
+
+const DIAGRAMA_PROCESO = lines(
+  "// Proceso en etapas de izquierda a derecha.",
+  'diagrama proceso(direccion="horizontal") {',
+  '  a = nodo("1. Idea", color=turquesa);',
+  '  b = nodo("2. Diseño", color=turquesa);',
+  '  c = nodo("3. Código", color=turquesa);',
+  '  d = nodo("4. Pruebas", color=turquesa);',
+  '  e = nodo("5. Entrega", tipo=inicio, color=verde);',
+  "  conectar(a, b);",
+  "  conectar(b, c);",
+  "  conectar(c, d);",
+  "  conectar(d, e);",
+  "}",
+);
+
+const DIAGRAMA_RED = lines(
+  "// Red: un servidor central y varios clientes generados con un bucle.",
+  "diagrama red(espaciado=50) {",
+  '  servidor = nodo("Servidor", tipo=caja, color=naranja);',
+  "  para (let i = 1; i <= 6; i = i + 1) {",
+  '    cliente = nodo("PC " + i);',
+  "    conectar(servidor, cliente, tipo=linea);",
+  "  }",
+  "}",
+);
+
 export const DSL_PRESETS: readonly DslPreset[] = [
   { id: "gato", name: "Gato", source: GATO },
   { id: "pez", name: "Pez", source: PEZ },
@@ -450,4 +527,9 @@ export const DSL_PRESETS: readonly DslPreset[] = [
   { id: "radial", name: "Patrón radial", source: PATRON_RADIAL },
   { id: "ciudad", name: "Ciudad paramétrica", source: CIUDAD },
   { id: "arbol-fractal", name: "Árbol fractal", source: ARBOL_FRACTAL },
+  { id: "diagrama-flujo", name: "Flujo con decisión", source: DIAGRAMA_FLUJO },
+  { id: "diagrama-arquitectura", name: "Arquitectura Vercel → Render", source: DIAGRAMA_ARQUITECTURA },
+  { id: "diagrama-organigrama", name: "Organigrama", source: DIAGRAMA_ORGANIGRAMA },
+  { id: "diagrama-proceso", name: "Proceso por etapas", source: DIAGRAMA_PROCESO },
+  { id: "diagrama-red", name: "Red con clientes", source: DIAGRAMA_RED },
 ];
