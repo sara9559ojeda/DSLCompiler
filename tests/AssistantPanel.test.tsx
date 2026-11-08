@@ -6,7 +6,7 @@ import { useEditorStore } from "../src/state/useEditorStore.js";
 import * as bridge from "../src/editor/editorBridge.js";
 
 const CURRENT = "// casa\nc1 = crear_circulo(radio=50, color=rojo, x=100, y=100);\n";
-const PROPOSED = "// casa\nc1 = crear_circulo(radio=50, color=azul, x=100, y=100);\n";
+const PROPOSED = "// casa\nc1 = crear_circulo(radio=50, color=azul, x=100, y=100);";
 
 class FakeClient implements IAiAssistClient {
   readonly requests: AssistRequest[] = [];
@@ -54,7 +54,8 @@ describe("AssistantPanel", () => {
     expect(useEditorStore.getState().source).toBe(CURRENT);
 
     fireEvent.click(screen.getByRole("button", { name: "Aceptar" }));
-    expect(replace).toHaveBeenCalledWith(PROPOSED);
+    // The user's code ended with a newline, so the replacement keeps it.
+    expect(replace).toHaveBeenCalledWith(`${PROPOSED}\n`);
     expect(screen.queryByText(/Compila correctamente/)).toBeNull();
   });
 

@@ -89,12 +89,18 @@ export function AssistantPanel({ client = defaultClient }: { readonly client?: I
   useEffect(() => () => controllerRef.current?.abort(), []);
 
   const stale = proposal !== null && proposal.base !== source;
-  const ops = useMemo(() => (proposal ? diffLines(proposal.base, proposal.response.dslSource) : []), [proposal]);
+  // A trailing newline is not a change worth showing; accepting keeps whichever ending the user's code had.
+  const ops = useMemo(
+    () => (proposal ? diffLines(proposal.base.replace(/\n+$/, ""), proposal.response.dslSource.replace(/\n+$/, "")) : []),
+    [proposal],
+  );
   const { hunks, skippedAfter } = useMemo(() => collapseDiff(ops), [ops]);
 
   const accept = (): void => {
     if (!proposal || stale) return;
-    replaceAllText(proposal.response.dslSource);
+    const endsWithNewline = proposal.base.endsWith("\n");
+    const next = proposal.response.dslSource.replace(/\n+$/, "");
+    replaceAllText(endsWithNewline ? `${next}\n` : next);
     setProposal(null);
     setPrompt("");
   };
