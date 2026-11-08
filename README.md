@@ -84,6 +84,67 @@ npm run e2e
 Usa el canal `chrome` del sistema (no descarga un Chromium propio) — tanto
 en local como en CI (`ubuntu-latest` trae Chrome preinstalado).
 
+## DSL Studio 2.0 (lenguaje 2.0.0)
+
+Novedades de esta rama (`feature/dsl-studio-2`):
+
+- **Lenguaje 2.0**: `const`/`let`, expresiones, funciones matemáticas, `para`,
+  `si`/`sino`, `funcion`/`retornar`, `grupo` y `diagrama`. Los programas 1.x
+  compilan igual (el test `tests/legacyCompat.test.ts` compara byte a byte los
+  8 presets originales con `compiler-core` 0.2.0).
+- **Editor visual bidireccional**: seleccionar, arrastrar, mover con flechas e
+  inspector; cada gesto reescribe solo los argumentos afectados (los
+  comentarios se conservan) y es un único paso de deshacer.
+- **Diagramas con auto-layout** (`diagrama flujo|arquitectura|organigrama|proceso|red`):
+  posiciones automáticas o fijadas a mano, y "Volver al layout automático".
+- **Asistente de IA** (generar / modificar / explicar): la propuesta se valida
+  compilándola en el backend, se muestra como diff y nunca reemplaza el código
+  sin aceptar. La API key vive solo en el backend.
+
+### Ejecutar en local (frontend + backend)
+
+El frontend necesita el `compiler-core` 2.0 local (el publicado en npm es
+0.2.0 y aún no se ha publicado nada):
+
+```bash
+# 1) Backend (otro repo): construir y levantar
+cd ../DSLCompiler_Backend
+npm ci && npm run build
+cp .env.example .env            # opcional: ANTHROPIC_API_KEY para el asistente
+docker compose up -d --build    # gateway en http://localhost:4000
+
+# 2) Frontend: enlazar el compiler-core local y arrancar
+cd ../CompilerIMG
+npm install
+npm run core:local              # core:status para ver cuál se usa, core:published para volver a npm
+npm run dev                     # http://localhost:5173
+```
+
+El chip "Lenguaje X.Y.Z" del pie compara la versión del Web Worker con la del
+backend (`/api/ai/health`); si difieren se marca en ámbar.
+
+### Variables de entorno
+
+| Variable | Dónde | Para qué |
+| --- | --- | --- |
+| `GATEWAY_URL` | contenedor del frontend (runtime) | URL pública del gateway |
+| `VITE_GATEWAY_URL` | `npm run dev` / `vite build` | igual, en build-time (por defecto `http://localhost:4000`) |
+| `LEGACY_CORE_DIST` | solo tests | ruta al `dist/index.js` de compiler-core 0.2.0 para el test de compatibilidad 1.x (sin ella se omite) |
+| `ANTHROPIC_API_KEY` | **solo backend** (`ai-assist`) | nunca llega al navegador; vacío = el asistente responde que no está configurado |
+| `ANTHROPIC_MODEL`, `ANTHROPIC_MAX_TOKENS` (2048), `ANTHROPIC_TIMEOUT_MS` (30000) | backend `ai-assist` | modelo y control de tokens/tiempo |
+| `ASSIST_MAX_ATTEMPTS` (3), `ASSIST_DEADLINE_MS` (45000), `ASSIST_MAX_OUTPUT_CHARS` (12000) | backend `ai-assist` | reintentos de validación, plazo total y tamaño máximo de la propuesta |
+| `AI_RATE_LIMIT_MAX` (10), `AI_RATE_LIMIT_WINDOW_MS` | gateway | límite de peticiones a `/api/ai/assist` |
+
+### Despliegue
+
+La arquitectura no cambia: gateway y compilador siguen hablando gRPC por
+`127.0.0.1` dentro del mismo contenedor de Render, y el frontend se sirve como
+contenedor estático (`render.yaml` y los Dockerfiles no se modificaron). No se
+despliega ningún servidor gRPC en Vercel. Antes de desplegar hay que publicar
+(con autorización explícita) el nuevo `compiler-core` y volver el frontend a
+`npm run core:published`; mientras tanto el backend y el Worker comparten la
+misma versión del lenguaje solo en local.
+
 ## Por qué el compile-preview no pasa por el gateway
 
 Compilar a SVG no tiene efectos secundarios ni necesita autenticación ni
