@@ -31,7 +31,7 @@ export * from "./compile.config.js";
 export const SVG_EXPORT_FILENAME = "diagrama.svg";
 export const PNG_EXPORT_FILENAME = "diagrama.png";
 
-export const BRAND_NAME = "Compilador de Imágenes";
+export const BRAND_NAME = "DSL Studio";
 
 /** External links shown in the footer. */
 export const PROJECT_LINKS: readonly { readonly label: string; readonly href: string }[] = [

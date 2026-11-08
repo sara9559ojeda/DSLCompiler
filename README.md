@@ -84,6 +84,43 @@ npm run e2e
 Usa el canal `chrome` del sistema (no descarga un Chromium propio) — tanto
 en local como en CI (`ubuntu-latest` trae Chrome preinstalado).
 
+## Interfaz: The Living Canvas
+
+Dos vistas sin router (hash): la **landing** (`/`) y el **estudio** (`#/estudio`),
+cada una en su propio chunk (la landing nunca descarga Monaco; el estudio nunca
+descarga Three.js).
+
+- `src/landing/` — hero con escultura 3D procedural (`HeroSculpture` →
+  `scene/SculptureCanvas`, react-three-fiber), playground real
+  (`InteractivePlayground`), galería (`ExampleGallery`), historia sticky
+  (`HowItWorks`), IA creativa (`CreativeAISection`) y CTA final. Todo lo que se
+  dibuja lo compila el compilador real en el Web Worker compartido
+  (`compiler/sharedCompiler.ts`); no hay SVG pre-renderizados.
+- `src/studio/` — `StudioWorkspace` (explorador · editor + problemas · resultado),
+  paneles redimensionables con ratón o teclado (`Splitter`), atajos
+  (`useShortcuts`, ver el icono de teclado en la cabecera), autoguardado en el
+  navegador (`useLocalProject`) y vista de una sola columna con barra inferior
+  en móvil.
+- `src/styles/` — `tokens.css` (paleta, tipografía fluida, sombras duras),
+  `landing.css`, `studio.css`.
+
+**Animaciones al scroll: solo CSS** (`animation-timeline: view()/scroll()`,
+`animation-range`, `view-timeline` nombrado, `position: sticky`). Van dentro de
+`@supports (animation-timeline: view())` y
+`@media (prefers-reduced-motion: no-preference)`: sin soporte o con movimiento
+reducido el contenido se ve completo y estático. No hay listeners de scroll ni
+librerías de animación.
+
+**3D**: carga diferida cuando el navegador está ocioso, `dpr` limitado, pausa
+fuera del viewport (`frameloop: "never"`), versión reducida en pantallas
+pequeñas y *fallback* SVG estático si no hay WebGL, el dispositivo es de poca
+potencia o el usuario prefiere movimiento reducido (con botón para activarlo).
+
+Dependencias añadidas: `three`, `@react-three/fiber` (React 18 → v8) y
+`@react-three/drei` (solo `Float` y `Outlines`). Justificación: la escultura es
+el protagonista del hero; se cargan en un chunk aparte (~223 kB gzip) y solo en
+la landing.
+
 ## DSL Studio 2.0 (lenguaje 2.0.0)
 
 Novedades de esta rama (`feature/dsl-studio-2`):

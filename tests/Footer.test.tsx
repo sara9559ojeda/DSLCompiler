@@ -7,9 +7,11 @@ describe("Footer", () => {
   it("links to every section of the page", () => {
     render(<Footer />);
     for (const [name, href] of [
-      ["Proyecto", "#proyecto"],
-      ["Compilar", "#compilar"],
-      ["Exportaciones", "#exportaciones"],
+      ["Lienzo", "#lienzo"],
+      ["Del código al arte", "#del-codigo-al-arte"],
+      ["Galería", "#galeria"],
+      ["Cómo funciona", "#como-funciona"],
+      ["IA creativa", "#ia"],
     ]) {
       expect(screen.getByRole("link", { name })).toHaveAttribute("href", href);
     }
@@ -25,8 +27,8 @@ describe("Footer", () => {
     }
   });
 
-  it("has a back-to-top link pointing at the hero", () => {
+  it("has a back-to-top link pointing at the hero (lienzo)", () => {
     render(<Footer />);
-    expect(screen.getByRole("link", { name: /Volver arriba/ })).toHaveAttribute("href", "#top");
+    expect(screen.getByRole("link", { name: /Volver arriba/ })).toHaveAttribute("href", "#lienzo");
   });
 });

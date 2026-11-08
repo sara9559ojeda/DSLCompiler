@@ -47,7 +47,15 @@ export function CodeEditor(): JSX.Element {
           registerEditor(editor, monaco);
           setMounted(true);
         }}
-        options={{ minimap: { enabled: false }, fontSize: 14, automaticLayout: true, padding: { top: 12 } }}
+        options={{
+          minimap: { enabled: false },
+          fontSize: 14,
+          fontFamily: '"JetBrains Mono", ui-monospace, Consolas, monospace',
+          fontLigatures: false,
+          automaticLayout: true,
+          padding: { top: 12 },
+          scrollBeyondLastLine: false,
+        }}
       />
     </Suspense>
   );

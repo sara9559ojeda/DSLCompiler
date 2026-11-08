@@ -1,15 +1,15 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("Compiler workflow", () => {
+test.describe("Studio: compiler workflow", () => {
   test("compiles the default program and shows a live SVG preview", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/#/estudio");
     await expect(page.getByText("Sin errores.")).toBeVisible({ timeout: 15_000 });
-    await expect(page.locator(".preview-panel__canvas svg")).toBeVisible();
-    await expect(page.locator(".preview-panel__canvas circle")).toBeVisible();
+    await expect(page.locator(".canvas-stage__art svg")).toBeVisible();
+    await expect(page.locator(".canvas-stage__art circle")).toBeVisible();
   });
 
   test("shows a diagnostic with its position when the program has an error", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/#/estudio");
     // Monaco's ARIA textbox node is an accessibility-only element that
     // Playwright's visibility check rejects; click the actual editor
     // surface instead.
@@ -22,7 +22,7 @@ test.describe("Compiler workflow", () => {
   });
 
   test("downloads an SVG file when clicking the SVG export button", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/#/estudio");
     await expect(page.getByText("Sin errores.")).toBeVisible({ timeout: 15_000 });
 
     const downloadPromise = page.waitForEvent("download");
@@ -35,7 +35,7 @@ test.describe("Compiler workflow", () => {
   test("downloads a PNG file when clicking the PNG export button (real round trip through the gateway)", async ({
     page,
   }) => {
-    await page.goto("/");
+    await page.goto("/#/estudio");
     await expect(page.getByText("Sin errores.")).toBeVisible({ timeout: 15_000 });
 
     const downloadPromise = page.waitForEvent("download");
@@ -46,7 +46,7 @@ test.describe("Compiler workflow", () => {
   });
 
   test("toggles between light and dark theme", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/#/estudio");
     const html = page.locator("html");
     const initialTheme = await html.getAttribute("data-theme");
 

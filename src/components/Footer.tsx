@@ -4,9 +4,11 @@ import { LanguageVersionChip } from "./LanguageVersionChip.js";
 import { BRAND_NAME, PROJECT_LINKS } from "../config/app.config.js";
 
 const SECTIONS = [
-  { label: "Proyecto", href: "#proyecto" },
-  { label: "Compilar", href: "#compilar" },
-  { label: "Exportaciones", href: "#exportaciones" },
+  { label: "Lienzo", href: "#lienzo" },
+  { label: "Del código al arte", href: "#del-codigo-al-arte" },
+  { label: "Galería", href: "#galeria" },
+  { label: "Cómo funciona", href: "#como-funciona" },
+  { label: "IA creativa", href: "#ia" },
 ] as const;
 
 export function Footer(): JSX.Element {
@@ -20,7 +22,7 @@ export function Footer(): JSX.Element {
             <span className="site-footer__wordmark">{BRAND_NAME}</span>
           </div>
           <p className="site-footer__tagline">
-            Escribe figuras en un lenguaje propio y míralas compilarse en vivo a SVG o PNG.
+            Creative coding: escribe figuras en un lenguaje propio y míralas compilarse en vivo a SVG o PNG.
           </p>
           <ul className="site-footer__chips" aria-label="Cómo está hecho">
             <li>Lexer → Parser → IR → SVG</li>
@@ -63,7 +65,7 @@ export function Footer(): JSX.Element {
         <span>
           © {new Date().getFullYear()} {BRAND_NAME}
         </span>
-        <a className="site-footer__top" href="#top">
+        <a className="site-footer__top" href="#lienzo">
           Volver arriba
           <ArrowUp size={14} aria-hidden />
         </a>
