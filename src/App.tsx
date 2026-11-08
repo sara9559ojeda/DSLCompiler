@@ -5,6 +5,7 @@ import { DiagnosticsList } from "./components/DiagnosticsList.js";
 import { Header } from "./components/Header.js";
 import { Hero } from "./components/Hero.js";
 import { AiGenerateBar } from "./components/AiGenerateBar.js";
+import { AssistantPanel } from "./components/AssistantPanel.js";
 import { ExportPanel } from "./components/ExportPanel.js";
 import { ExportHistoryPanel } from "./components/ExportHistoryPanel.js";
 import { PresetGallery } from "./components/PresetGallery.js";
@@ -23,6 +24,7 @@ export function App(): JSX.Element {
       editor={<CodeEditor />}
       preview={<PreviewPanel />}
       diagnostics={<DiagnosticsList />}
+      assistant={<AssistantPanel />}
       exportPanel={<ExportPanel />}
       exportHistory={<ExportHistoryPanel />}
       footer={<Footer />}

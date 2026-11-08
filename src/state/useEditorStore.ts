@@ -17,6 +17,10 @@ interface EditorState {
   readonly selectionOrigin: "canvas" | "editor" | "inspector" | null;
   /** Why the last visual edit was refused (expression, shared…), shown by the inspector. */
   readonly editRefusal: Extract<EditPlan, { ok: false }> | null;
+  /** A request another component hands to the AI panel (the quick "Generar" bar); the panel runs it and clears it. */
+  readonly assistantRequest: { readonly mode: "generate" | "modify" | "explain"; readonly prompt: string } | null;
+  readonly requestAssistant: (request: { mode: "generate" | "modify" | "explain"; prompt: string }) => void;
+  readonly consumeAssistantRequest: () => void;
   readonly setSource: (source: string) => void;
   readonly setResult: (result: CompileResult, inspection?: Inspection | null, compiledSource?: string | null) => void;
   readonly select: (id: string | null, origin?: "canvas" | "editor" | "inspector") => void;
@@ -38,6 +42,9 @@ export const useEditorStore = create<EditorState>((set) => ({
   selectedId: null,
   selectionOrigin: null,
   editRefusal: null,
+  assistantRequest: null,
+  requestAssistant: (assistantRequest) => set({ assistantRequest }),
+  consumeAssistantRequest: () => set({ assistantRequest: null }),
   setSource: (source) => set({ source }),
   setResult: (result, inspection = null, compiledSource = null) => set({ result, inspection, compiledSource }),
   select: (id, origin = "canvas") => set({ selectedId: id, selectionOrigin: id === null ? null : origin, editRefusal: null }),

@@ -9,6 +9,7 @@ interface AppLayoutProps {
   readonly editor: ReactNode;
   readonly preview: ReactNode;
   readonly diagnostics: ReactNode;
+  readonly assistant: ReactNode;
   readonly exportPanel: ReactNode;
   readonly exportHistory: ReactNode;
   readonly footer: ReactNode;
@@ -22,6 +23,7 @@ export function AppLayout({
   editor,
   preview,
   diagnostics,
+  assistant,
   exportPanel,
   exportHistory,
   footer,
@@ -68,6 +70,13 @@ export function AppLayout({
               </div>
             </section>
             <aside className="workspace__sidebar" id="exportaciones">
+              <div className="panel" id="asistente">
+                <header className="panel__head">
+                  <span className="panel__eyebrow">Asistente IA</span>
+                  <h2 className="panel__title">Genera, modifica o explica</h2>
+                </header>
+                <div className="panel__body">{assistant}</div>
+              </div>
               <div className="panel">
                 <header className="panel__head">
                   <span className="panel__eyebrow">Exportaciones</span>

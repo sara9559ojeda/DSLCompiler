@@ -124,6 +124,26 @@ export function onUserCursor(listener: (offset: number) => void): () => void {
   return () => subscription.dispose();
 }
 
+/**
+ * Replaces the whole program as ONE undoable edit (accepting an AI proposal):
+ * Ctrl+Z brings the previous code back. Returns false when there is no editor.
+ */
+export function replaceAllText(text: string): boolean {
+  if (!instance) return false;
+  const { editor } = instance;
+  const model = editor.getModel();
+  if (!model) return false;
+  programmatic = true;
+  try {
+    editor.pushUndoStop();
+    editor.executeEdits("assistant", [{ range: model.getFullModelRange(), text, forceMoveMarkers: true }]);
+    editor.pushUndoStop();
+  } finally {
+    programmatic = false;
+  }
+  return true;
+}
+
 export function undoEdit(): void {
   instance?.editor.trigger(VISUAL_EDIT_SOURCE, "undo", null);
 }
