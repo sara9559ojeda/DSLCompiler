@@ -1,5 +1,6 @@
 import { ArrowUp, ExternalLink } from "lucide-react";
 import { BrandMark } from "./BrandMotif.js";
+import { LanguageVersionChip } from "./LanguageVersionChip.js";
 import { BRAND_NAME, PROJECT_LINKS } from "../config/app.config.js";
 
 const SECTIONS = [
@@ -25,6 +26,7 @@ export function Footer(): JSX.Element {
             <li>Lexer → Parser → IR → SVG</li>
             <li>gRPC</li>
             <li>TypeScript</li>
+            <LanguageVersionChip />
           </ul>
         </div>
 

@@ -1747,3 +1747,8 @@ a {
   color: var(--color-text);
   border: 1px solid var(--color-border-bold);
 }
+
+.site-footer__chip--warn {
+  color: var(--palette-navy);
+  background: var(--palette-orange);
+}
