@@ -8,23 +8,29 @@ declare global {
   }
 }
 
+export const DEFAULT_GATEWAY_URL = "http://localhost:4000";
+
+/** A configured value is usable when it is non-blank and not the template's unreplaced "${GATEWAY_URL}". */
+function usable(value: string | undefined): string | undefined {
+  const trimmed = value?.trim();
+  return trimmed && !trimmed.startsWith("${") ? trimmed : undefined;
+}
+
 /**
  * Resolution order: runtime config (injected by docker/runtime-config-entrypoint.sh
  * at container start — same built image, any deploy target, no rebuild) →
  * build-time Vite env var → localhost default for `npm run dev`.
  * Guards against the template's literal "${GATEWAY_URL}" when the
- * entrypoint never ran (e.g. opening dist/ directly, no Docker).
+ * entrypoint never ran (e.g. opening dist/ directly, no Docker). Trailing
+ * slashes are dropped because clients append paths that start with "/".
  */
-function resolveGatewayUrl(): string {
-  const runtimeValue = window.__RUNTIME_CONFIG__?.GATEWAY_URL;
-  if (runtimeValue && !runtimeValue.startsWith("${")) {
-    return runtimeValue;
-  }
-  return import.meta.env.VITE_GATEWAY_URL ?? "http://localhost:4000";
+export function resolveGatewayUrl(runtimeValue: string | undefined, buildTimeValue: string | undefined): string {
+  const url = usable(runtimeValue) ?? usable(buildTimeValue) ?? DEFAULT_GATEWAY_URL;
+  return url.replace(/\/+$/, "");
 }
 
 /** All tunable frontend constants live here — nothing below reads process.env/import.meta.env directly. */
-export const GATEWAY_URL: string = resolveGatewayUrl();
+export const GATEWAY_URL: string = resolveGatewayUrl(window.__RUNTIME_CONFIG__?.GATEWAY_URL, import.meta.env.VITE_GATEWAY_URL);
 
 export * from "./compile.config.js";
 
