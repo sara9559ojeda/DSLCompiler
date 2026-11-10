@@ -1,8 +1,11 @@
 # Compiler snapshot
 
-`compiler-core-f726e8f.tgz` contains the compiled browser-safe compiler from
+`compiler-core-898b295.tgz` contains the compiled browser-safe compiler from
 `sara9559ojeda/DSLCompiler_Backend` commit
-`f726e8f1d242b772b32f1e1e2c87db68ff0923f3` (language 2.0.0).
+`898b295` (language 2.0.0). Compared with the previous snapshot (`f726e8f`) it
+fixes names that exist on `Object.prototype` (`constructor`, `toString`,
+`__proto__`…): they are now ordinary identifiers and are never resolved as
+colors.
 
 The package metadata still reports 0.2.0 upstream, but this snapshot includes
 the language 2.0 implementation. It is pinned as a file dependency so clean

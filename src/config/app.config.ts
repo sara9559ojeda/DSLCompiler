@@ -8,23 +8,29 @@ declare global {
   }
 }
 
+export const DEFAULT_GATEWAY_URL = "http://localhost:4000";
+
+/** A configured value is usable when it is non-blank and not the template's unreplaced "${GATEWAY_URL}". */
+function usable(value: string | undefined): string | undefined {
+  const trimmed = value?.trim();
+  return trimmed && !trimmed.startsWith("${") ? trimmed : undefined;
+}
+
 /**
  * Resolution order: runtime config (injected by docker/runtime-config-entrypoint.sh
  * at container start — same built image, any deploy target, no rebuild) →
  * build-time Vite env var → localhost default for `npm run dev`.
  * Guards against the template's literal "${GATEWAY_URL}" when the
- * entrypoint never ran (e.g. opening dist/ directly, no Docker).
+ * entrypoint never ran (e.g. opening dist/ directly, no Docker). Trailing
+ * slashes are dropped because clients append paths that start with "/".
  */
-function resolveGatewayUrl(): string {
-  const runtimeValue = window.__RUNTIME_CONFIG__?.GATEWAY_URL;
-  if (runtimeValue && !runtimeValue.startsWith("${")) {
-    return runtimeValue;
-  }
-  return import.meta.env.VITE_GATEWAY_URL ?? "http://localhost:4000";
+export function resolveGatewayUrl(runtimeValue: string | undefined, buildTimeValue: string | undefined): string {
+  const url = usable(runtimeValue) ?? usable(buildTimeValue) ?? DEFAULT_GATEWAY_URL;
+  return url.replace(/\/+$/, "");
 }
 
 /** All tunable frontend constants live here — nothing below reads process.env/import.meta.env directly. */
-export const GATEWAY_URL: string = resolveGatewayUrl();
+export const GATEWAY_URL: string = resolveGatewayUrl(window.__RUNTIME_CONFIG__?.GATEWAY_URL, import.meta.env.VITE_GATEWAY_URL);
 
 export * from "./compile.config.js";
 
@@ -44,6 +50,11 @@ export const PROJECT_LINKS: readonly { readonly label: string; readonly href: st
 export const EXPORT_HISTORY_STORAGE_KEY = "compiler-img:export-history";
 /** Oldest entries are dropped once the list grows past this, to keep localStorage bounded (PNG entries embed a base64 data URL). */
 export const EXPORT_HISTORY_MAX_ENTRIES = 8;
+
+/** localStorage key of the studio's autosaved project — see studio/localProjectStorage.ts. */
+export const LOCAL_PROJECT_STORAGE_KEY = "dsl-studio:project";
+/** Quiet time after the last edit before the project is autosaved. */
+export const LOCAL_PROJECT_AUTOSAVE_DELAY_MS = 700;
 
 export const DEFAULT_DSL_SOURCE = [
   "c1 = crear_circulo(radio=50, color=rojo, x=100, y=100);",

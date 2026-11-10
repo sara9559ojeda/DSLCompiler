@@ -15,13 +15,32 @@ interface ExportHistoryState {
   readonly addEntry: (entry: Omit<ExportHistoryEntry, "id" | "createdAt">) => void;
 }
 
+/**
+ * localStorage is outside the app's control (older versions, manual edits), so every
+ * stored entry is checked before it is rendered. The link only ever points at a
+ * `data:` URL, never at another scheme such as `javascript:`.
+ */
+export function isExportHistoryEntry(value: unknown): value is ExportHistoryEntry {
+  if (typeof value !== "object" || value === null) return false;
+  const entry = value as Record<string, unknown>;
+  return (
+    typeof entry.id === "string" &&
+    (entry.format === "svg" || entry.format === "png") &&
+    typeof entry.filename === "string" &&
+    typeof entry.createdAt === "number" &&
+    Number.isFinite(entry.createdAt) &&
+    typeof entry.dataUrl === "string" &&
+    entry.dataUrl.startsWith("data:")
+  );
+}
+
 /** localStorage can be unavailable (private browsing, test environments) — never let that crash the app. */
-function loadPersisted(): readonly ExportHistoryEntry[] {
+export function loadPersistedExportHistory(): readonly ExportHistoryEntry[] {
   try {
     const raw = window.localStorage.getItem(EXPORT_HISTORY_STORAGE_KEY);
     if (!raw) return [];
     const parsed: unknown = JSON.parse(raw);
-    return Array.isArray(parsed) ? (parsed as ExportHistoryEntry[]) : [];
+    return Array.isArray(parsed) ? parsed.filter(isExportHistoryEntry).slice(0, EXPORT_HISTORY_MAX_ENTRIES) : [];
   } catch {
     return [];
   }
@@ -37,7 +56,7 @@ function persist(entries: readonly ExportHistoryEntry[]): void {
 
 /** Records every real SVG/PNG export the user actually triggered — never seeded with placeholder data. */
 export const useExportHistoryStore = create<ExportHistoryState>((set, get) => ({
-  entries: loadPersisted(),
+  entries: loadPersistedExportHistory(),
   addEntry: (entry) => {
     const next = [
       { ...entry, id: crypto.randomUUID(), createdAt: Date.now() },
