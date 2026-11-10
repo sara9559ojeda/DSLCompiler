@@ -7,13 +7,28 @@ import { useEditorStore } from "../state/useEditorStore.js";
 import { SHORTCUT_HELP } from "./useShortcuts.js";
 import type { SaveState } from "./useLocalProject.js";
 
-function useCompileStatus(): { label: string; variant: "idle" | "compiling" | "ok" | "error" } {
-  const isCompiling = useEditorStore((s) => s.isCompiling);
-  const result = useEditorStore((s) => s.result);
+export interface CompileStatus {
+  readonly label: string;
+  readonly variant: "idle" | "compiling" | "ok" | "error";
+}
+
+type CompileResultLike = {
+  readonly success: boolean;
+  readonly diagnostics: readonly { readonly severity: string }[];
+} | null;
+
+/** The header badge for a compile: pure, so it is tested without rendering the header. */
+export function compileStatusOf(isCompiling: boolean, result: CompileResultLike): CompileStatus {
   if (isCompiling) return { label: "Compilando…", variant: "compiling" };
   if (!result) return { label: "Listo", variant: "idle" };
   if (!result.success || result.diagnostics.some((d) => d.severity === "error")) return { label: "Con errores", variant: "error" };
   return { label: "Compilado", variant: "ok" };
+}
+
+function useCompileStatus(): CompileStatus {
+  const isCompiling = useEditorStore((s) => s.isCompiling);
+  const result = useEditorStore((s) => s.result);
+  return compileStatusOf(isCompiling, result);
 }
 
 const SAVE_LABEL: Record<SaveState, string> = {
