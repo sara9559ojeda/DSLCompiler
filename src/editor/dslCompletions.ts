@@ -350,8 +350,8 @@ export function hoverDocFor(word: string, fullText: string): string | null {
   const variable = declarations.variables.find((candidate) => candidate.name === word);
   if (variable) return `**${variable.constant ? "Constante" : "Variable"}** \`${variable.name}\``;
   if (declarations.shapes.includes(word)) return `**Figura** \`${word}\``;
-  const color = NAMED_COLORS[word];
-  if (color) return `**Color** \`${word}\` — ${color}`;
+  // Own properties only: `constructor` or `toString` must not be found through Object.prototype.
+  if (Object.hasOwn(NAMED_COLORS, word)) return `**Color** \`${word}\` — ${NAMED_COLORS[word]}`;
   return null;
 }
 
