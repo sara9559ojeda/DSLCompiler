@@ -8,9 +8,17 @@ import { GatewayExportClient } from "../api/GatewayExportClient.js";
 import type { IExportClient } from "../api/IExportClient.js";
 import { SVG_EXPORT_FILENAME, PNG_EXPORT_FILENAME } from "../config/app.config.js";
 
-const exportClient: IExportClient = new GatewayExportClient();
+const defaultExportClient: IExportClient = new GatewayExportClient();
 
-export function ExportPanel(): JSX.Element {
+/** How long an export button shows its check mark after a download. */
+export const EXPORT_CONFIRMATION_MS = 1_800;
+
+interface ExportPanelProps {
+  /** Injected in tests; the app uses the gateway client (Dependency Inversion). */
+  readonly exportClient?: IExportClient;
+}
+
+export function ExportPanel({ exportClient = defaultExportClient }: ExportPanelProps = {}): JSX.Element {
   const result = useEditorStore((s) => s.result);
   const source = useEditorStore((s) => s.source);
   const addHistoryEntry = useExportHistoryStore((s) => s.addEntry);
@@ -21,7 +29,7 @@ export function ExportPanel(): JSX.Element {
   // Transient confirmation: the button swaps its icon for a check for a moment.
   useEffect(() => {
     if (!done) return;
-    const timer = window.setTimeout(() => setDone(null), 1800);
+    const timer = window.setTimeout(() => setDone(null), EXPORT_CONFIRMATION_MS);
     return () => window.clearTimeout(timer);
   }, [done]);
 
@@ -31,9 +39,14 @@ export function ExportPanel(): JSX.Element {
     if (!result?.svg) return;
     // Pure client-side: the last compiled SVG is already in memory, no round trip needed.
     const blob = new Blob([result.svg], { type: "image/svg+xml" });
+    setExportError(null);
     downloadBlob(blob, SVG_EXPORT_FILENAME);
-    addHistoryEntry({ format: "svg", filename: SVG_EXPORT_FILENAME, dataUrl: await blobToDataUrl(blob) });
     setDone("svg");
+    try {
+      addHistoryEntry({ format: "svg", filename: SVG_EXPORT_FILENAME, dataUrl: await blobToDataUrl(blob) });
+    } catch {
+      // The file was already downloaded; only the history entry is lost.
+    }
   };
 
   const handleExportPng = async (): Promise<void> => {
@@ -42,8 +55,10 @@ export function ExportPanel(): JSX.Element {
     try {
       const blob = await exportClient.exportPng(source);
       downloadBlob(blob, PNG_EXPORT_FILENAME);
-      addHistoryEntry({ format: "png", filename: PNG_EXPORT_FILENAME, dataUrl: await blobToDataUrl(blob) });
       setDone("png");
+      await blobToDataUrl(blob)
+        .then((dataUrl) => addHistoryEntry({ format: "png", filename: PNG_EXPORT_FILENAME, dataUrl }))
+        .catch(() => undefined); // downloaded already; only the history entry is lost
     } catch (error) {
       setExportError(error instanceof Error ? error.message : "No se pudo exportar a PNG.");
     } finally {
