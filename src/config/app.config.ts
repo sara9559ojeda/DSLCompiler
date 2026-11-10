@@ -45,6 +45,11 @@ export const EXPORT_HISTORY_STORAGE_KEY = "compiler-img:export-history";
 /** Oldest entries are dropped once the list grows past this, to keep localStorage bounded (PNG entries embed a base64 data URL). */
 export const EXPORT_HISTORY_MAX_ENTRIES = 8;
 
+/** localStorage key of the studio's autosaved project — see studio/localProjectStorage.ts. */
+export const LOCAL_PROJECT_STORAGE_KEY = "dsl-studio:project";
+/** Quiet time after the last edit before the project is autosaved. */
+export const LOCAL_PROJECT_AUTOSAVE_DELAY_MS = 700;
+
 export const DEFAULT_DSL_SOURCE = [
   "c1 = crear_circulo(radio=50, color=rojo, x=100, y=100);",
   "r1 = crear_rectangulo(ancho=80, alto=40, color=azul, x=200, y=150);",
