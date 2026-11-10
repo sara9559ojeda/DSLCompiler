@@ -205,7 +205,8 @@
   grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
   align-items: center;
   gap: clamp(1rem, 3vw, 3rem);
-  padding: calc(var(--nav-h) + 2.5rem) var(--gutter) 3.5rem;
+  /* bottom padding includes the overlap of the next section's rounded top edge, so nothing is ever covered */
+  padding: calc(var(--nav-h) + 2.5rem) var(--gutter) calc(clamp(28px, 5vw, 72px) + 3.5rem);
   max-width: var(--page-max);
   margin: 0 auto;
   isolation: isolate;
@@ -268,7 +269,7 @@
 .lhero__scroll {
   position: absolute;
   left: var(--gutter);
-  bottom: 1.4rem;
+  bottom: calc(clamp(28px, 5vw, 72px) + 0.8rem);
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
@@ -864,7 +865,7 @@
 
 @media (max-width: 900px) {
   /* Hero stacks: headline first (full impact), sculpture second, smaller */
-  .lhero { grid-template-columns: 1fr; align-content: start; gap: 0; padding-bottom: 5rem; min-height: auto; }
+  .lhero { grid-template-columns: 1fr; align-content: start; gap: 0; padding-bottom: calc(clamp(28px, 5vw, 72px) + 3rem); min-height: auto; }
   .lhero__title { font-size: clamp(3.4rem, 1rem + 15vw, 7rem); }
   .sculpture { max-width: min(100%, 460px); margin-top: 1.5rem; }
   .lhero__scroll, .lhero__plane--squiggle { display: none; }

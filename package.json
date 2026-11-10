@@ -21,7 +21,7 @@
     "@monaco-editor/react": "^4.6.0",
     "@react-three/drei": "^9.114.3",
     "@react-three/fiber": "^8.17.10",
-    "@saramariaojeda9559/compiler-core": "^0.2.0",
+    "@saramariaojeda9559/compiler-core": "file:vendor/compiler-core-f726e8f.tgz",
     "lucide-react": "^0.454.0",
     "monaco-editor": "^0.52.0",
     "react": "^18.3.1",

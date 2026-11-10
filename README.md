@@ -5,8 +5,7 @@ Imágenes (DSL de figuras → SVG/PNG). Consume el backend
 ([`DSLCompiler_Backend`](https://github.com/sara9559ojeda/DSLCompiler_Backend))
 por HTTP para exportar PNG, y compila a SVG en vivo enteramente en el
 navegador usando [`@saramariaojeda9559/compiler-core`](https://www.npmjs.com/package/@saramariaojeda9559/compiler-core)
-(publicado en npm, instalado como una dependencia normal — no vía
-workspace).
+(snapshot del lenguaje 2.0 fijado en `vendor/`; ver `vendor/README.md`).
 
 ## Diseño (INP < 200ms)
 
@@ -60,6 +59,27 @@ docker run -p 8080:80 -e GATEWAY_URL=http://localhost:4000 dslcompiler-web
 ```
 
 ## Desplegar
+
+### Vercel (frontend de producción)
+
+El proyecto `dslcompiler-web` usa `vercel.json`: `npm ci`, `npm run build`
+y salida `dist/`. La dependencia del compilador está incluida en `vendor/`,
+por lo que no necesita un checkout local del backend ni publicar en npm.
+Configura `VITE_GATEWAY_URL` en Production con la URL HTTPS del gateway;
+actualmente `https://compiler-img-gateway.onrender.com`. El gateway debe
+permitir `https://dslcompiler-web.vercel.app` en `CORS_ORIGIN`.
+
+Para desplegar desde este repositorio, con la sesión de Vercel iniciada:
+
+```bash
+npm ci
+npm run typecheck
+npm test
+npm run build
+vercel --prod
+```
+
+### Render (alternativa Docker)
 
 [`render.yaml`](render.yaml) despliega este frontend solo, en
 [Render](https://render.com), como un servicio Docker independiente. Una
@@ -140,8 +160,9 @@ Novedades de esta rama (`feature/dsl-studio-2`):
 
 ### Ejecutar en local (frontend + backend)
 
-El frontend necesita el `compiler-core` 2.0 local (el publicado en npm es
-0.2.0 y aún no se ha publicado nada):
+El frontend instala automáticamente el snapshot de `compiler-core` con
+lenguaje 2.0 incluido en `vendor/`. El enlace local es opcional cuando se
+modifica el compilador en paralelo:
 
 ```bash
 # 1) Backend (otro repo): construir y levantar
@@ -153,7 +174,7 @@ docker compose up -d --build    # gateway en http://localhost:4000
 # 2) Frontend: enlazar el compiler-core local y arrancar
 cd ../CompilerIMG
 npm install
-npm run core:local              # core:status para ver cuál se usa, core:published para volver a npm
+npm run core:local              # opcional; npm ci restaura el snapshot fijado
 npm run dev                     # http://localhost:5173
 ```
 
@@ -174,13 +195,11 @@ backend (`/api/ai/health`); si difieren se marca en ámbar.
 
 ### Despliegue
 
-La arquitectura no cambia: gateway y compilador siguen hablando gRPC por
-`127.0.0.1` dentro del mismo contenedor de Render, y el frontend se sirve como
-contenedor estático (`render.yaml` y los Dockerfiles no se modificaron). No se
-despliega ningún servidor gRPC en Vercel. Antes de desplegar hay que publicar
-(con autorización explícita) el nuevo `compiler-core` y volver el frontend a
-`npm run core:published`; mientras tanto el backend y el Worker comparten la
-misma versión del lenguaje solo en local.
+Gateway y compilador siguen en Render; el frontend estático se despliega
+en Vercel con `VITE_GATEWAY_URL`. No se despliega ningún servidor gRPC en
+Vercel. El snapshot de `vendor/` permite desplegar el lenguaje 2.0 sin
+publicar una nueva versión del paquete en npm. Actualiza el backend al
+commit indicado en `vendor/README.md` para mantener ambas versiones alineadas.
 
 ## Por qué el compile-preview no pasa por el gateway
 
