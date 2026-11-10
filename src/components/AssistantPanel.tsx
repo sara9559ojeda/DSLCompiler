@@ -11,6 +11,7 @@ import {
 import { collapseDiff, diffLines, hasChanges } from "../ai/lineDiff.js";
 import { replaceAllText } from "../editor/editorBridge.js";
 import { useEditorStore } from "../state/useEditorStore.js";
+import { countLabel } from "../text/pluralize.js";
 
 const defaultClient: IAiAssistClient = new GatewayAiAssistClient();
 
@@ -163,7 +164,7 @@ export function AssistantPanel({ client = defaultClient }: { readonly client?: I
         {needsCode && !hasCode ? <p className="assistant__hint">Escribe algo de código en el editor primero.</p> : null}
         {mode === "explain" && errorCount > 0 && !running ? (
           <p className="assistant__hint">
-            El programa tiene {errorCount} {errorCount === 1 ? "error" : "errores"}: la explicación los incluirá.
+            El programa tiene {countLabel(errorCount, "error", "errores")}: la explicación los incluirá.
           </p>
         ) : null}
       </form>
@@ -182,8 +183,12 @@ export function AssistantPanel({ client = defaultClient }: { readonly client?: I
           <div className="assistant__proposal">
             <p className={`assistant__badge assistant__badge--${proposal.response.valid ? "ok" : "bad"}`}>
               {proposal.response.valid
-                ? `Compila correctamente · ${proposal.response.attempts.length} ${proposal.response.attempts.length === 1 ? "intento" : "intentos"}`
-                : `No compila (${proposal.response.diagnostics.filter((d) => d.severity === "error").length} errores tras ${proposal.response.attempts.length} intentos)`}
+                ? `Compila correctamente · ${countLabel(proposal.response.attempts.length, "intento", "intentos")}`
+                : `No compila (${countLabel(
+                    proposal.response.diagnostics.filter((d) => d.severity === "error").length,
+                    "error",
+                    "errores",
+                  )} tras ${countLabel(proposal.response.attempts.length, "intento", "intentos")})`}
             </p>
 
             {proposal.response.svg ? (

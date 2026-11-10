@@ -105,7 +105,7 @@ describe("AssistantPanel", () => {
     type("x");
     fireEvent.click(screen.getByRole("button", { name: "Modificar" }));
 
-    expect(await screen.findByText(/No compila \(1 errores tras 3 intentos\)/)).toBeInTheDocument();
+    expect(await screen.findByText(/No compila \(1 error tras 3 intentos\)/)).toBeInTheDocument();
     expect(screen.getByText(/Falta el parámetro requerido/)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Aplicar con errores" })).toBeInTheDocument();
   });
